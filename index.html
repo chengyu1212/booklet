@@ -102,6 +102,39 @@
             }
         }
 
+
+        /* ===== 企業健檢互動工具 ===== */
+        .assessment-step.hidden { display: none; }
+        .step-dot {
+            width: 8px; height: 8px; border-radius: 999px;
+            background: #d1d5db; transition: all 0.3s ease;
+        }
+        .step-dot.active { width: 22px; background: #00a29a; }
+        .step-dot.done { background: #22c55e; }
+        .industry-btn {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 0.4rem; padding: 0.9rem 0.5rem; border-radius: 1rem;
+            border: 1.5px solid #e5e7eb; background: #fff; cursor: pointer;
+            font-size: 0.75rem; font-weight: 700; color: #374151;
+            transition: all 0.2s ease; text-align: center;
+        }
+        .industry-btn i { font-size: 1.2rem; color: #00a29a; }
+        .industry-btn:hover { border-color: #00a29a; box-shadow: 0 6px 16px rgba(0,162,154,0.15); transform: translateY(-2px); }
+        .industry-btn:active { transform: scale(0.96); }
+        .industry-btn.selected { border-color: #00a29a; background: #e0f2f1; }
+        .quiz-option-btn {
+            display: flex; align-items: center; gap: 0.65rem; width: 100%;
+            padding: 0.75rem 1rem; border-radius: 0.85rem;
+            border: 1.5px solid #e5e7eb; background: #fff; cursor: pointer;
+            font-size: 0.85rem; font-weight: 600; color: #374151; text-align: left;
+            transition: all 0.2s ease;
+        }
+        .quiz-option-btn:hover { border-color: #00a29a; background: #f0fdfa; transform: translateX(3px); }
+        .quiz-option-btn:active { transform: scale(0.98); }
+        .quiz-option-btn .opt-badge {
+            width: 1.6rem; height: 1.6rem; border-radius: 999px; background: #e0f2f1; color: #00796b;
+            font-weight: 800; font-size: 0.75rem; display: flex; align-items: center; justify-content: center; shrink-0;
+        }
         .page-logo {
             height: 2.25rem;
             width: auto;
@@ -189,7 +222,7 @@
                     永續綠色金融<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-fubon to-eco">綜合指南</span>
                 </h1>
                 <p class="text-xl text-gray-600 mb-8 border-t border-b py-4 max-w-2xl">
-                    永續經濟活動、綠色證券、溫室氣體範疇3<br>
+                    永續經濟活動、綠色證券、溫室氣體範疇三<br>
                     <span class="font-bold text-fubon-dark mt-2 block">三個概念，一次搞懂！</span>
                 </p>
                 <p class="text-sm text-gray-400 mt-4">向下滾動開始探索 <i class="fa-solid fa-chevron-down animate-bounce ml-1"></i></p>
@@ -734,38 +767,38 @@
             </div>
         </section>
 
-        <!-- PAGE 10: 範疇3簡介 -->
+        <!-- PAGE 10: 範疇三簡介 -->
         <section class="page-section" id="page10">
             <div class="glass-card rounded-3xl p-8 md:p-10">
                 <div class="flex items-start justify-between gap-4">
                 <div>
                     <span class="text-fubon font-bold tracking-wider text-sm mb-1 block">第三部分｜溫室氣體</span>
-                    <h2 class="text-2xl md:text-3xl font-bold mb-4 border-b-2 border-fubon inline-block pb-1">什麼是溫室氣體範疇3？</h2>
+                    <h2 class="text-2xl md:text-3xl font-bold mb-4 border-b-2 border-fubon inline-block pb-1">什麼是溫室氣體範疇三？</h2>
                 </div>
                     <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMjQ4cHQiIGhlaWdodD0iMjU3cHQiIHZpZXdCb3g9IjAgMCAyNDggMjU3IiB2ZXJzaW9uPSIxLjEiPgo8ZyBpZD0ic3VyZmFjZTEiPgo8cGF0aCBzdHlsZT0iIHN0cm9rZTpub25lO2ZpbGwtcnVsZTpub256ZXJvO2ZpbGw6cmdiKDAlLDYzLjUyOTQxMiUsNjEuNTY4NjI3JSk7ZmlsbC1vcGFjaXR5OjE7IiBkPSJN IDE4Ni40Njg3NSAxMjcuMjYxNzE5IEMgMTg2LjQ2ODc1IDEyNy4yNjE3MTkgMTg2LjQ2ODc1IDEyOC4wMTE3MTkgMTg4LjYyNSAxMjkuNTExNzE5IEMgMjAyLjMyMDMxMiAxNDAuNTU4NTk0IDIwOS42MzY3MTkgMTUxLjIzODI4MSAyMDkuNTQyOTY5IDE3Mi45NjA5MzggQyAyMDkuNDQ5MjE5IDIwMC4xMTcxODggMTg1LjgxMjUgMjE5Ljc4MTI1IDE1OS4wODIwMzEgMjE5Ljc4MTI1IEwgMTU5LjA4MjAzMSAyNTcuMjQyMTg4IEMgMjA1LjY5NTMxMiAyNTcuMjQyMTg4IDI0OCAyMjQuMDg5ODQ0IDI0OCAxNzYuNzk2ODc1IEMgMjQ4IDE1OS44NDc2NTYgMjQzLjQwMjM0NCAxNDMuMTc5Njg4IDIzMS44NjMyODEgMTI2Ljk4NDM3NSBDIDIzMi40Mjk2ODggMTI2LjMyNDIxOSAyMzQuODY3MTg4IDEyMy40MjE4NzUgMjM2LjkzMzU5NCAxMTkuNzczNDM4IEMgMjM5Ljc0NjA5NCAxMTQuNzE0ODQ0IDI0MC4zMDg1OTQgMTA4LjYyNSAyNDAuMzA4NTk0IDg4LjMwODU5NCBMIDI0MC4zMDg1OTQgMCBMIDEyMC44MDg1OTQgMCBMIDEyMC44MDg1OTQgNzAuMzI0MjE5IEwgODIuNzMwNDY5IDcwLjMyNDIxOSBMIDgyLjczMDQ2OSAxMDkgTCAxNTkuNzM0Mzc1IDEwOSBMIDE1OS43MzQzNzUgMzkuNjEzMjgxIEwgMjAyLjY5NTMxMiAzOS42MTMyODEgTCAyMDIuNjk1MzEyIDk5LjQ0OTIxOSBDIDIwMi42OTUzMTIgOTkuNDQ5MjE5IDIwNC40NzY1NjIgMTE2LjIxMDkzOCAxODYuNDY4NzUgMTI3LjI2MTcxOSAiLz4KPHBhdGggc3R5bGU9IiBzdHJva2U6bm9uZTtmaWxsLXJ1bGU6bm9uemVybztmaWxsOnJnYigwJSw1OC40MzEzNzMlLDcyLjE1Njg2MyUpO2ZpbGwtb3BhY2l0eToxOyIgZD0iTSA4My4xMDE1NjIgMCBMIDcxLjk0MTQwNiAwIEMgNTEuNjc5Njg4IDAuNTYyNSAzMC40ODQzNzUgNi45Mjk2ODggMTYuMzIwMzEyIDIzLjAzOTA2MiBDIDEuNDA2MjUgMzkuODk0NTMxIDAgNTQuOTY4NzUgMCA3OS43ODUxNTYgQyAwIDk2LjY0MDYyNSAwIDI1Ny4xNDg0MzggMCAyNTcuMTQ4NDM4IEwgMTIxLjM3NSAyNTcuMTQ4NDM4IEwgMTIxLjM3NSAxODcuNTcwMzEyIEwgMTU5LjgyODEyNSAxODcuNTcwMzEyIEwgMTU5LjgyODEyNSAxNDguNDI1NzgxIEwgODIuNzMwNDY5IDE0OC40MjU3ODEgTCA4Mi43MzA0NjkgMjE4LjU2NjQwNiBMIDM4LjY0NDUzMSAyMTguNTY2NDA2IEwgMzguNjQ0NTMxIDcxLjU0Njg3NSBDIDM4LjY0NDUzMSA3MS41NDY4NzUgMzUuNzM0Mzc1IDM5LjYxMzI4MSA3NC4yODkwNjIgMzguNzY5NTMxIEwgODMuMTA1NDY5IDM4LjM5NDUzMSBMIDgzLjEwNTQ2OSAwICIvPgo8L2c+Cjwvc3ZnPgo=" alt="富邦 Fubon Logo" class="page-logo shrink-0">
                 </div>
                 
                 <p class="text-base text-gray-700 bg-white p-4 rounded-xl shadow-sm border-l-4 border-fubon">
-                    範疇3 是企業<strong class="text-fubon-dark bg-fubon-light px-2 py-0.5 rounded mx-1">整個價值鏈</strong>產生的間接溫室氣體排放。
+                    範疇三 是企業<strong class="text-fubon-dark bg-fubon-light px-2 py-0.5 rounded mx-1">整個價值鏈</strong>產生的間接溫室氣體排放。
                 </p>
 
                 <div class="flex flex-col md:flex-row items-center justify-center gap-4 my-auto">
                     <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 w-full md:w-1/3 text-center hover:shadow-lg hover:-translate-y-1 active:scale-[0.97] transition-all duration-200">
-                        <div class="text-gray-400 text-xs font-bold mb-2">範疇1 (Scope 1)</div>
+                        <div class="text-gray-400 text-xs font-bold mb-2">範疇一 (Scope 1)</div>
                         <i class="fa-solid fa-smog text-3xl text-gray-600 mb-2"></i>
                         <h4 class="font-bold text-gray-800 text-base">直接排放</h4>
                         <p class="text-xs text-gray-500 mt-1">廠房內的鍋爐/發電機、汽/貨車等運輸工具、冷媒外洩等</p>
                     </div>
                     <div class="text-2xl text-gray-300 hidden md:block font-light">+</div>
                     <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 w-full md:w-1/3 text-center hover:shadow-lg hover:-translate-y-1 active:scale-[0.97] transition-all duration-200">
-                        <div class="text-gray-400 text-xs font-bold mb-2">範疇2 (Scope 2)</div>
+                        <div class="text-gray-400 text-xs font-bold mb-2">範疇二 (Scope 2)</div>
                         <i class="fa-solid fa-bolt text-3xl text-yellow-500 mb-2"></i>
                         <h4 class="font-bold text-gray-800 text-base">能源間接排放</h4>
                         <p class="text-xs text-gray-500 mt-1">公司日常營運向電力公司購買的電能、向外買來的熱力或蒸汽</p>
                     </div>
                     <div class="text-2xl text-gray-300 hidden md:block font-light">+</div>
                     <div class="bg-fubon-dark text-white p-5 rounded-2xl shadow-lg border border-fubon transform md:scale-105 w-full md:w-1/3 text-center hover:shadow-xl active:scale-[1.02] transition-all duration-200">
-                        <div class="text-fubon-light text-xs font-bold mb-2">範疇3 (Scope 3)</div>
+                        <div class="text-fubon-light text-xs font-bold mb-2">範疇三 (Scope 3)</div>
                         <i class="fa-solid fa-link text-3xl text-white mb-2"></i>
                         <h4 class="font-bold text-white text-base">價值鏈間接排放</h4>
                         <p class="text-xs text-fubon-light mt-1">上下游所有合作夥伴</p>
@@ -774,10 +807,10 @@
 
                 <div class="bg-red-50 text-red-800 p-4 rounded-xl border border-red-100">
                     <h4 class="font-bold mb-1 flex items-center text-sm">
-                        <i class="fa-solid fa-circle-exclamation mr-2"></i> 為什麼要揭露範疇3？
+                        <i class="fa-solid fa-circle-exclamation mr-2"></i> 為什麼要揭露範疇三？
                     </h4>
                     <p class="text-xs md:text-sm leading-relaxed text-red-900">
-                        在大多數企業中，範疇3 的排放占比最大<strong class="text-red-600 bg-red-100 px-1 rounded mx-1">高達 70-90%</strong>！光控制自己的排放遠不夠，完整評估才能找到最大減碳機會，並對標全球淨零標準。
+                        在大多數企業中，範疇三的排放占比最大<strong class="text-red-600 bg-red-100 px-1 rounded mx-1">高達 70-90%</strong>！光控制自己的排放遠不夠，完整評估才能找到最大減碳機會，並對標全球淨零標準。
                     </p>
                 </div>
             </div>
@@ -980,7 +1013,7 @@
                             <span class="w-9 h-9 rounded-full bg-fubon text-white font-black text-sm flex items-center justify-center shadow-sm shrink-0">04</span>
                             <h4 class="font-bold text-gray-800 text-base">計算驗證</h4>
                         </div>
-                        <p class="text-sm text-gray-500 leading-relaxed">計算範疇 3 總排放量、數據涵蓋率，並完成內部審核與確信。</p>
+                        <p class="text-sm text-gray-500 leading-relaxed">計算範疇三 總排放量、數據涵蓋率，並完成內部審核與確信。</p>
                     </div>
 
                     <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 flex flex-col hover:border-fubon hover:shadow-md transition">
@@ -1030,6 +1063,92 @@
                                 <div class="text-xs text-teal-100">衡量基礎與計算範圍完整性</div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 14: 延伸互動 - 企業自我健檢 -->
+        <section class="page-section" id="page14">
+            <div class="glass-card rounded-3xl p-8 md:p-10">
+                <div class="flex items-start justify-between gap-4">
+                    <div>
+                        <span class="text-fubon font-bold tracking-wider text-sm mb-1 block">延伸互動｜自我健檢</span>
+                        <h2 class="text-2xl md:text-3xl font-bold mb-2 border-b-2 border-fubon inline-block pb-1">企業永續健檢工具</h2>
+                        <p class="text-xs md:text-sm text-gray-600" id="assessSubtitle">3 個步驟，快速了解貴公司的永續準備度，並取得專屬建議</p>
+                    </div>
+                    <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMjQ4cHQiIGhlaWdodD0iMjU3cHQiIHZpZXdCb3g9IjAgMCAyNDggMjU3IiB2ZXJzaW9uPSIxLjEiPgo8ZyBpZD0ic3VyZmFjZTEiPgo8cGF0aCBzdHlsZT0iIHN0cm9rZTpub25lO2ZpbGwtcnVsZTpub256ZXJvO2ZpbGw6cmdiKDAlLDYzLjUyOTQxMiUsNjEuNTY4NjI3JSk7ZmlsbC1vcGFjaXR5OjE7IiBkPSJNIDE4Ni40Njg3NSAxMjcuMjYxNzE5IEMgMTg2LjQ2ODc1IDEyNy4yNjE3MTkgMTg2LjQ2ODc1IDEyOC4wMTE3MTkgMTg4LjYyNSAxMjkuNTExNzE5IEMgMjAyLjMyMDMxMiAxNDAuNTU4NTk0IDIwOS42MzY3MTkgMTUxLjIzODI4MSAyMDkuNTQyOTY5IDE3Mi45NjA5MzggQyAyMDkuNDQ5MjE5IDIwMC4xMTcxODggMTg1LjgxMjUgMjE5Ljc4MTI1IDE1OS4wODIwMzEgMjE5Ljc4MTI1IEwgMTU5LjA4MjAzMSAyNTcuMjQyMTg4IEMgMjA1LjY5NTMxMiAyNTcuMjQyMTg4IDI0OCAyMjQuMDg5ODQ0IDI0OCAxNzYuNzk2ODc1IEMgMjQ4IDE1OS44NDc2NTYgMjQzLjQwMjM0NCAxNDMuMTc5Njg4IDIzMS44NjMyODEgMTI2Ljk4NDM3NSBDIDIzMi40Mjk2ODggMTI2LjMyNDIxOSAyMzQuODY3MTg4IDEyMy40MjE4NzUgMjM2LjkzMzU5NCAxMTkuNzczNDM4IEMgMjM5Ljc0NjA5NCAxMTQuNzE0ODQ0IDI0MC4zMDg1OTQgMTA4LjYyNSAyNDAuMzA4NTk0IDg4LjMwODU5NCBMIDI0MC4zMDg1OTQgMCBMIDEyMC44MDg1OTQgMCBMIDEyMC44MDg1OTQgNzAuMzI0MjE5IEwgODIuNzMwNDY5IDcwLjMyNDIxOSBMIDgyLjczMDQ2OSAxMDkgTCAxNTkuNzM0Mzc1IDEwOSBMIDE1OS43MzQzNzUgMzkuNjEzMjgxIEwgMjAyLjY5NTMxMiAzOS42MTMyODEgTCAyMDIuNjk1MzEyIDk5LjQ0OTIxOSBDIDIwMi42OTUzMTIgOTkuNDQ5MjE5IDIwNC40NzY1NjIgMTE2LjIxMDkzOCAxODYuNDY4NzUgMTI3LjI2MTcxOSAiLz4KPHBhdGggc3R5bGU9IiBzdHJva2U6bm9uZTtmaWxsLXJ1bGU6bm9uemVybztmaWxsOnJnYigwJSw1OC40MzEzNzMlLDcyLjE1Njg2MyUpO2ZpbGwtb3BhY2l0eToxOyIgZD0iTSA4My4xMDE1NjIgMCBMIDcxLjk0MTQwNiAwIEMgNTEuNjc5Njg4IDAuNTYyNSAzMC40ODQzNzUgNi45Mjk2ODggMTYuMzIwMzEyIDIzLjAzOTA2MiBDIDEuNDA2MjUgMzkuODk0NTMxIDAgNTQuOTY4NzUgMCA3OS43ODUxNTYgQyAwIDk2LjY0MDYyNSAwIDI1Ny4xNDg0MzggMCAyNTcuMTQ4NDM4IEwgMTIxLjM3NSAyNTcuMTQ4NDM4IEwgMTIxLjM3NSAxODcuNTcwMzEyIEwgMTU5LjgyODEyNSAxODcuNTcwMzEyIEwgMTU5LjgyODEyNSAxNDguNDI1NzgxIEwgODIuNzMwNDY5IDE0OC40MjU3ODEgTCA4Mi43MzA0NjkgMjE4LjU2NjQwNiBMIDM4LjY0NDUzMSAyMTguNTY2NDA2IEwgMzguNjQ0NTMxIDcxLjU0Njg3NSBDIDM4LjY0NDUzMSA3MS41NDY4NzUgMzUuNzM0Mzc1IDM5LjYxMzI4MSA3NC4yODkwNjIgMzguNzY5NTMxIEwgODMuMTA1NDY5IDM4LjM5NDUzMSBMIDgzLjEwNTQ2OSAwICIvPgo8L2c+Cjwvc3ZnPgo=" alt="富邦 Fubon Logo" class="page-logo shrink-0">
+                </div>
+
+                <!-- 內部步驟指示 -->
+                <div class="flex items-center justify-center gap-2 my-4" id="assessStepDots">
+                    <span class="step-dot active" data-step="1"></span>
+                    <span class="step-dot" data-step="2"></span>
+                    <span class="step-dot" data-step="3"></span>
+                </div>
+
+                <!-- STEP 1：選擇產業 -->
+                <div id="assessStep1" class="assessment-step my-auto">
+                    <h3 class="text-center font-bold text-gray-700 text-sm md:text-base mb-4">
+                        <i class="fa-solid fa-building-flag text-fubon mr-1"></i> 請選擇貴公司所屬產業
+                    </h3>
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-2.5 md:gap-3" id="industryGrid"></div>
+                </div>
+
+                <!-- STEP 2：健檢問答 -->
+                <div id="assessStep2" class="assessment-step hidden my-auto">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-xs font-bold text-fubon" id="quizProgressLabel">第 1 / 6 題</span>
+                        <div class="w-28 md:w-40 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                            <div id="quizProgressBar" class="h-full bg-gradient-to-r from-eco to-fubon transition-all duration-300" style="width:0%"></div>
+                        </div>
+                    </div>
+                    <h3 class="font-bold text-gray-800 text-base md:text-lg mb-4 min-h-[3rem]" id="quizQuestion"></h3>
+                    <div class="space-y-2.5" id="quizOptions"></div>
+                    <button id="quizBackBtn" class="text-xs text-gray-400 hover:text-fubon mt-4 flex items-center gap-1 transition-colors">
+                        <i class="fa-solid fa-arrow-left"></i> 上一步
+                    </button>
+                </div>
+
+                <!-- STEP 3：專屬結果 -->
+                <div id="assessStep3" class="assessment-step hidden my-auto">
+                    <div class="rounded-2xl p-5 md:p-6 text-white shadow-md mb-4 bg-gradient-to-r" id="resultBanner">
+                        <div class="flex items-center gap-4">
+                            <span class="text-4xl md:text-5xl" id="resultIcon">🌱</span>
+                            <div>
+                                <div class="text-xs opacity-80 font-semibold" id="resultIndustryLabel">貴公司產業別</div>
+                                <div class="text-xl md:text-2xl font-bold" id="resultLevelName">萌芽階段</div>
+                            </div>
+                        </div>
+                        <p class="text-xs md:text-sm mt-3 opacity-95 leading-relaxed" id="resultDesc"></p>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-3 mb-2">
+                        <div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
+                            <h4 class="font-bold text-xs md:text-sm text-fubon-dark mb-2 flex items-center gap-1.5">
+                                <i class="fa-solid fa-industry"></i> 產業重點提醒
+                            </h4>
+                            <p class="text-xs md:text-sm text-gray-600 leading-relaxed" id="resultIndustryTip"></p>
+                        </div>
+                        <div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
+                            <h4 class="font-bold text-xs md:text-sm text-fubon-dark mb-2 flex items-center gap-1.5">
+                                <i class="fa-solid fa-list-check"></i> 建議下一步
+                            </h4>
+                            <ul class="text-xs md:text-sm text-gray-600 space-y-1.5" id="resultNextSteps"></ul>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm mb-2">
+                        <h4 class="font-bold text-xs md:text-sm text-fubon-dark mb-2.5 flex items-center gap-1.5">
+                            <i class="fa-solid fa-bullseye"></i> 建議優先重點盤查的範疇三類別
+                        </h4>
+                        <div class="flex flex-wrap gap-2" id="resultCategories"></div>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <button id="restartBtn" class="text-xs md:text-sm font-bold text-white bg-fubon hover:bg-fubon-dark px-5 py-2 rounded-full transition-colors shadow-sm">
+                            <i class="fa-solid fa-rotate-right mr-1"></i> 重新測驗
+                        </button>
                     </div>
                 </div>
             </div>
@@ -1092,7 +1211,7 @@
         const growthStages = [
             { upTo: 1, icon: '🌰' },  // 種子期：第 1-2 頁
             { upTo: 4, icon: '🌱' },  // 破土萌芽期：第 3-5 頁
-            { upTo: 8, icon: '🌿' },  // 青年期：第 6-9 頁
+            { upTo: 8, icon: '🪴' },  // 青年期：第 6-9 頁
             { upTo: totalPages - 1, icon: '🌳' } // 成熟期：第 10-13 頁
         ];
 
@@ -1110,6 +1229,257 @@
             sections[0].classList.add('is-visible');
         }
         updateReadingProgress(0);
+    </script>
+    <script>
+    (function () {
+        // ===== 資料設定 =====
+        const industries = [
+            { id: 'manufacturing', label: '製造業', icon: 'fa-industry',
+              tip: '製程能源密集，範疇一、二排放通常佔比最高。建議優先掌握用電、燃料使用數據，並留意原物料採購的範疇三上游排放。',
+              keyCategories: [1, 3, 4, 11] },
+            { id: 'construction', label: '營造建築\n與不動產', icon: 'fa-building',
+              tip: '施工機具燃料與建材生產是主要排放來源。建議優先盤點營建機具油耗，並掌握主要建材(如水泥、鋼鐵)採購量的碳足跡。',
+              keyCategories: [1, 2, 4, 13] },
+            { id: 'transport', label: '運輸與\n倉儲業', icon: 'fa-truck',
+              tip: '車隊、船舶或航空燃料為核心排放源。建議優先建立車隊油耗與里程數的盤查機制，逐步導入低碳運具規劃。',
+              keyCategories: [1, 3, 4, 9] },
+            { id: 'waste', label: '廢棄物清理\n及回收', icon: 'fa-recycle',
+              tip: '處理製程中的能源使用與甲烷排放是重點。同時可留意再利用產出對客戶範疇三下游減碳的貢獻，作為差異化優勢。',
+              keyCategories: [4, 5, 9] },
+            { id: 'agriculture', label: '農林業', icon: 'fa-leaf',
+              tip: '留意農業活動排放(如肥料使用、畜牧)及土地利用變化。林業活動也可能產生碳匯效益，可作為揭露亮點。',
+              keyCategories: [1, 4, 5, 12] },
+            { id: 'food', label: '食品/\n餐飲業', icon: 'fa-bowl-food',
+              tip: '原物料食材採購與冷鏈物流是主要排放來源，廚餘與包材廢棄物也不容忽視。建議優先盤點食材供應鏈與門店能耗。',
+              keyCategories: [1, 4, 5, 9] },
+            { id: 'finance', label: '金融/\n保險服務業', icon: 'fa-building-columns',
+              tip: '自身營運排放通常不高，但範疇三投融資組合排放(financed emissions)是最大挑戰，也是主管機關關注的揭露重點。',
+              keyCategories: [15, 6, 7] },
+            { id: 'tech', label: '科技\n資訊業', icon: 'fa-microchip',
+              tip: '資料中心與設備用電(範疇二)、晶片製造供應鏈(範疇三上游)是主要排放來源，綠電採購與供應鏈議合是常見策略。',
+              keyCategories: [1, 2, 11, 12] },
+            { id: 'retail', label: '零售/\n消費品業', icon: 'fa-cart-shopping',
+              tip: '供應鏈生產與物流配送(範疇三上游)、門市能耗是重點。產品生命週期碳足跡也逐漸受消費者與通路商關注。',
+              keyCategories: [1, 4, 9, 12] },
+            { id: 'other', label: '其他產業', icon: 'fa-briefcase',
+              tip: '建議先從辦公室用電、差旅與採購支出等營運面排放盤點起步，再逐步擴大至供應鏈上下游排放來源。',
+              keyCategories: [1, 6, 7] }
+        ];
+
+        // 範疇三 15 大類別對照表(對應手冊內容)
+        const scope3Categories = {
+            1: '購買的商品及勞務', 2: '資本財', 3: '燃料及能源相關活動', 4: '上游運輸及配送',
+            5: '營運廢棄物', 6: '商務旅行', 7: '員工通勤', 8: '上游租賃資產',
+            9: '下游運輸及配送', 10: '已銷售產品之加工', 11: '已銷售產品之使用', 12: '產品生命週期結束(廢棄)',
+            13: '下游租賃資產', 14: '加盟', 15: '投資'
+        };
+
+
+        const questions = [
+            {
+                q: '貴公司是否已建立溫室氣體盤查制度(範疇一+二)？',
+                options: [
+                    { text: '尚未開始', score: 0 },
+                    { text: '了解中／規劃中', score: 1 },
+                    { text: '執行中，尚未完整', score: 2 },
+                    { text: '已完成盤查並定期更新', score: 3 }
+                ]
+            },
+            {
+                q: '是否已掌握範疇三(供應鏈)排放來源？',
+                options: [
+                    { text: '尚未開始', score: 0 },
+                    { text: '了解中／規劃中', score: 1 },
+                    { text: '已鑑別重大類別', score: 2 },
+                    { text: '已計算並定期追蹤', score: 3 }
+                ]
+            },
+            {
+                q: '是否曾在永續報告書或融資申請中被要求揭露相關資料？',
+                options: [
+                    { text: '從未被要求', score: 0 },
+                    { text: '曾被詢問但尚未準備', score: 1 },
+                    { text: '有初步準備但不完整', score: 2 },
+                    { text: '已能提供完整揭露資料', score: 3 }
+                ]
+            },
+            {
+                q: '是否已設定減碳目標或淨零時間表？',
+                options: [
+                    { text: '尚未設定', score: 0 },
+                    { text: '討論中', score: 1 },
+                    { text: '已設定初步目標', score: 2 },
+                    { text: '已設定具體目標並追蹤進度', score: 3 }
+                ]
+            },
+            {
+                q: '是否已導入外部確信／查證機制(如第三方查證)？',
+                options: [
+                    { text: '尚未考慮', score: 0 },
+                    { text: '正在評估', score: 1 },
+                    { text: '部分數據已查證', score: 2 },
+                    { text: '已完成第三方查證', score: 3 }
+                ]
+            },
+            {
+                q: '公司內部是否有專責人員或部門處理永續數據？',
+                options: [
+                    { text: '沒有專責人力', score: 0 },
+                    { text: '由其他部門兼任', score: 1 },
+                    { text: '有兼職小組', score: 2 },
+                    { text: '有專責部門／人員', score: 3 }
+                ]
+            }
+        ];
+
+        const levels = [
+            { max: 4,  icon: '🌰', name: '起步階段', gradient: 'from-amber-500 to-amber-600',
+              desc: '貴公司正處於永續資訊揭露的起點。建議先從溫室氣體盤查制度與基礎數據蒐集著手，逐步建立管理規範。' },
+            { max: 9,  icon: '🌱', name: '萌芽階段', gradient: 'from-fubon to-fubon-dark',
+              desc: '已有初步認識與規劃，接下來的重點是把盤查範圍擴大到供應鏈(範疇三)，並落實數據追蹤機制。' },
+            { max: 14, icon: '🪴', name: '成長階段', gradient: 'from-eco to-eco-dark',
+              desc: '已具備一定基礎，建議強化數據品質、導入外部查證，並開始設定具體可追蹤的減碳目標。' },
+            { max: 18, icon: '🌳', name: '領先階段', gradient: 'from-fubon-dark to-eco-dark',
+              desc: '貴公司在永續揭露上已相當成熟，可持續優化數據顆粒度，並發揮產業影響力帶動供應鏈共同轉型。' }
+        ];
+
+        const nextStepsByLevel = [
+            ['參考手冊「第一部分」了解永續經濟活動的分類與適用範圍', '盤點公司主要能源與燃料使用情形，建立基礎數據蒐集習慣', '指定內部窗口，開始了解溫室氣體盤查的基本規範'],
+            ['依手冊「第三部分：6步走流程」，由重大性排放源開始逐步建立盤查規範', '嘗試鑑別供應鏈中最具重大性的範疇三類別', '參考「第二部分」了解綠色證券認證的評估核心，超前部署'],
+            ['強化數據蒐集完整度，逐步以供應商實際數據取代推估值', '評估導入第三方查證，提升揭露資料的可信度', '參考手冊「第二部分：評分標準」，檢視目前資料是否符合評等要求'],
+            ['持續優化數據顆粒度，減少推估值比重、提高第一手數據佔比', '善用已具備的優勢，主動與供應鏈夥伴議合，共同推動減碳', '評估參與綠色證券認證，展現企業轉型成果與市場區隔']
+        ];
+
+        // ===== 狀態 =====
+        const state = { industry: null, qIndex: 0, answers: [] };
+
+        // ===== DOM =====
+        const industryGrid = document.getElementById('industryGrid');
+        const step1 = document.getElementById('assessStep1');
+        const step2 = document.getElementById('assessStep2');
+        const step3 = document.getElementById('assessStep3');
+        const stepDots = document.querySelectorAll('#assessStepDots .step-dot');
+        const quizProgressLabel = document.getElementById('quizProgressLabel');
+        const quizProgressBar = document.getElementById('quizProgressBar');
+        const quizQuestion = document.getElementById('quizQuestion');
+        const quizOptions = document.getElementById('quizOptions');
+        const quizBackBtn = document.getElementById('quizBackBtn');
+        const restartBtn = document.getElementById('restartBtn');
+
+        if (!industryGrid) return; // 頁面不存在時（例如舊版快取）直接跳過
+
+        // ===== 渲染 Step1：產業選擇 =====
+        industries.forEach(ind => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'industry-btn';
+            btn.innerHTML = `<i class="fa-solid ${ind.icon}"></i><span style="white-space:pre-line;">${ind.label}</span>`;
+            btn.addEventListener('click', () => {
+                state.industry = ind.id;
+                document.querySelectorAll('.industry-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                setTimeout(() => goToStep(2), 180);
+            });
+            industryGrid.appendChild(btn);
+        });
+
+        // ===== Step 指示點 =====
+        function goToStep(n) {
+            [step1, step2, step3].forEach((el, i) => {
+                el.classList.toggle('hidden', i !== (n - 1));
+            });
+            stepDots.forEach((dot, i) => {
+                dot.classList.remove('active', 'done');
+                if (i + 1 < n) dot.classList.add('done');
+                if (i + 1 === n) dot.classList.add('active');
+            });
+            if (n === 2) renderQuestion();
+            if (n === 3) renderResult();
+        }
+
+        // ===== Step2：問答 =====
+        function renderQuestion() {
+            const idx = state.qIndex;
+            const total = questions.length;
+            const item = questions[idx];
+            quizProgressLabel.textContent = `第 ${idx + 1} / ${total} 題`;
+            quizProgressBar.style.width = `${((idx) / total) * 100}%`;
+            quizQuestion.textContent = item.q;
+            quizOptions.innerHTML = '';
+            const labels = ['A', 'B', 'C', 'D'];
+            item.options.forEach((opt, oi) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'quiz-option-btn';
+                btn.innerHTML = `<span class="opt-badge">${labels[oi]}</span><span>${opt.text}</span>`;
+                btn.addEventListener('click', () => {
+                    state.answers[idx] = opt.score;
+                    quizProgressBar.style.width = `${((idx + 1) / total) * 100}%`;
+                    setTimeout(() => {
+                        if (idx + 1 < total) {
+                            state.qIndex++;
+                            renderQuestion();
+                        } else {
+                            goToStep(3);
+                        }
+                    }, 150);
+                });
+                quizOptions.appendChild(btn);
+            });
+            quizBackBtn.style.visibility = idx === 0 ? 'hidden' : 'visible';
+        }
+
+        quizBackBtn.addEventListener('click', () => {
+            if (state.qIndex > 0) {
+                state.qIndex--;
+                renderQuestion();
+            } else {
+                goToStep(1);
+            }
+        });
+
+        // ===== Step3：結果 =====
+        function renderResult() {
+            const total = state.answers.reduce((a, b) => a + (b || 0), 0);
+            const level = levels.find(l => total <= l.max) || levels[levels.length - 1];
+            const levelIdx = levels.indexOf(level);
+            const ind = industries.find(i => i.id === state.industry) || industries[industries.length - 1];
+
+            const banner = document.getElementById('resultBanner');
+            banner.className = `rounded-2xl p-5 md:p-6 text-white shadow-md mb-4 bg-gradient-to-r ${level.gradient}`;
+            document.getElementById('resultIcon').textContent = level.icon;
+            document.getElementById('resultIndustryLabel').textContent = ind.label.replace(/\n/g, '');
+            document.getElementById('resultLevelName').textContent = level.name;
+            document.getElementById('resultDesc').textContent = level.desc;
+            document.getElementById('resultIndustryTip').textContent = ind.tip;
+
+            const stepsList = document.getElementById('resultNextSteps');
+            stepsList.innerHTML = '';
+            nextStepsByLevel[levelIdx].forEach(step => {
+                const li = document.createElement('li');
+                li.className = 'flex items-start gap-1.5';
+                li.innerHTML = `<i class="fa-solid fa-circle-check text-eco mt-0.5 shrink-0"></i><span>${step}</span>`;
+                stepsList.appendChild(li);
+            });
+
+            const categoriesBox = document.getElementById('resultCategories');
+            categoriesBox.innerHTML = '';
+            (ind.keyCategories || []).forEach(num => {
+                const chip = document.createElement('span');
+                chip.className = 'inline-flex items-center gap-1.5 bg-fubon-light text-fubon-dark text-xs font-bold px-3 py-1.5 rounded-full';
+                chip.innerHTML = `<span class="bg-fubon text-white rounded-full w-4 h-4 flex items-center justify-center text-[0.65rem]">${num}</span>${scope3Categories[num] || ''}`;
+                categoriesBox.appendChild(chip);
+            });
+        }
+
+        restartBtn.addEventListener('click', () => {
+            state.industry = null;
+            state.qIndex = 0;
+            state.answers = [];
+            document.querySelectorAll('.industry-btn').forEach(b => b.classList.remove('selected'));
+            goToStep(1);
+        });
+    })();
     </script>
 </body>
 </html>
