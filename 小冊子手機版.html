@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>富邦證券｜永續綠色金融綜合指南</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Noto Sans TC -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Noto Sans TC"', 'sans-serif'],
+                    },
+                    colors: {
+                        fubon: {
+                            light: '#e0f2f1',
+                            DEFAULT: '#00a29a',
+                            dark: '#00796b',
+                        },
+                        eco: {
+                            light: '#dcfce7',
+                            DEFAULT: '#22c55e',
+                            dark: '#166534',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #f0fdfa 0%, #e0f2f1 100%);
+            overscroll-behavior-y: none;
+        }
+        ::-webkit-scrollbar {
+            display: none;
+        }
+        .snap-y-container {
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+            height: 100vh;
+            height: 100dvh;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+        .page-section {
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            height: 100vh;
+            height: 100dvh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem;
+            position: relative;
+            box-sizing: border-box;
+        }
+        @media (min-width: 768px) {
+            .page-section {
+                padding: 1.5rem;
+            }
+        }
+        .glass-card {
+            position: relative;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 10px 28px 0 rgba(0, 162, 154, 0.10);
+            width: 100%;
+            max-width: 68rem;
+            height: 100%;
+            max-height: 94dvh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            overflow-y: auto;
+            border-radius: 1.25rem;
+            
+            /* 預設初始狀態：隱藏且下移 20px */
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        @media (min-width: 768px) {
+            .glass-card {
+                border-radius: 1.75rem;
+                max-height: 90vh;
+                min-height: 580px;
+                justify-content: space-between;
+            }
+        }
+
+        /* 滾動到每一頁時觸發 fadeInUp 質感動畫 */
+        .page-section.is-visible .glass-card {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .glass-card {
+                opacity: 1 !important;
+                transform: none !important;
+                animation: none !important;
+            }
+        }
+
+        .page-logo {
+            height: 1.75rem;
+            width: auto;
+            opacity: 0.92;
+        }
+        @media (min-width: 768px) {
+            .page-logo {
+                height: 2.5rem;
+            }
+        }
+
+        /* 閱讀進度條 */
+        #readingProgress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(0,162,154,0.12);
+            z-index: 50;
+        }
+        #readingProgressFill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #22c55e, #00a29a);
+            transition: width 0.4s ease;
+            border-radius: 0 4px 4px 0;
+        }
+        #readingProgressIcon {
+            position: fixed;
+            top: 4px;
+            left: 0%;
+            transform: translateX(-50%);
+            transition: left 0.4s ease;
+            z-index: 51;
+            font-size: 1.15rem;
+            line-height: 1;
+            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.15));
+        }
+        #readingProgressLabel {
+            position: fixed;
+            top: 8px;
+            right: 10px;
+            z-index: 51;
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: #00796b;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+        @media (min-width: 768px) {
+            #readingProgress { height: 7px; }
+            #readingProgressIcon { top: 7px; font-size: 1.6rem; }
+            #readingProgressLabel { top: 12px; font-size: 0.75rem; padding: 3px 10px; }
+        }
+        .nav-dot {
+            transition: all 0.3s ease;
+        }
+        .nav-dot.active {
+            transform: scale(1.5);
+            background-color: #00a29a;
+        }
+    </style>
+</head>
+<body class="text-gray-800 antialiased selection:bg-fubon-light">
+
+    <!-- 閱讀進度條 -->
+    <div id="readingProgress"><div id="readingProgressFill"></div></div>
+    <div id="readingProgressIcon">🌱</div>
+    <div id="readingProgressLabel">1 / 13</div>
+
+    <div class="fixed right-4 top-1/2 transform -translate-y-1/2 z-50 flex flex-col gap-3 hidden md:flex" id="dotNav">
+    </div>
+
+    <main class="snap-y-container" id="mainContainer">
+
+        <!-- PAGE 01: 封面 -->
+        <section class="page-section" id="page1">
+            <div class="glass-card p-6 md:p-14 text-center items-center justify-center my-auto">
+                <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMjQ4cHQiIGhlaWdodD0iMjU3cHQiIHZpZXdCb3g9IjAgMCAyNDggMjU3IiB2ZXJzaW9uPSIxLjEiPgo8ZyBpZD0ic3VyZmFjZTEiPgo8cGF0aCBzdHlsZT0iIHN0cm9rZTpub25lO2ZpbGwtcnVsZTpub256ZXJvO2ZpbGw6cmdiKDAlLDYzLjUyOTQxMiUsNjEuNTY4NjI3JSk7ZmlsbC1vcGFjaXR5OjE7IiBkPSJNIDE4Ni40Njg3NSAxMjcuMjYxNzE5IEMgMTg2LjQ2ODc1IDEyNy4yNjE3MTkgMTg2LjQ2ODc1IDEyOC4wMTE3MTkgMTg4LjYyNSAxMjkuNTExNzE5IEMgMjAyLjMyMDMxMiAxNDAuNTU4NTk0IDIwOS42MzY3MTkgMTUxLjIzODI4MSAyMDkuNTQyOTY5IDE3Mi45NjA5MzggQyAyMDkuNDQ5MjE5IDIwMC4xMTcxODggMTg1LjgxMjUgMjE5Ljc4MTI1IDE1OS4wODIwMzEgMjE5Ljc4MTI1IEwgMTU5LjA4MjAzMSAyNTcuMjQyMTg4IEMgMjA1LjY5NTMxMiAyNTcuMjQyMTg4IDI0OCAyMjQuMDg5ODQ0IDI0OCAxNzYuNzk2ODc1IEMgMjQ4IDE1OS44NDc2NTYgMjQzLjQwMjM0NCAxNDMuMTc5Njg4IDIzMS44NjMyODEgMTI2Ljk4NDM3NSBDIDIzMi40Mjk2ODggMTI2LjMyNDIxOSAyMzQuODY3MTg4IDEyMy40MjE4NzUgMjM2LjkzMzU5NCAxMTkuNzczNDM4IEMgMjM5Ljc0NjA5NCAxMTQuNzE0ODQ0IDI0MC4zMDg1OTQgMTA4LjYyNSAyNDAuMzA4NTk0IDg4LjMwODU5NCBMIDI0MC4zMDg1OTQgMCBMIDEyMC44MDg1OTQgMCBMIDEyMC44MDg1OTQgNzAuMzI0MjE5IEwgODIuNzMwNDY5IDcwLjMyNDIxOSBMIDgyLjczMDQ2OSAxMDkgTCAxNTkuNzM0Mzc1IDEwOSBMIDE1OS43MzQzNzUgMzkuNjEzMjgxIEwgMjAyLjY5NTMxMiAzOS42MTMyODEgTCAyMDIuNjk1MzEyIDk5LjQ0OTIxOSBDIDIwMi42OTUzMTIgOTkuNDQ5MjE5IDIwNC40NzY1NjIgMTE2LjIxMDkzOCAxODYuNDY4NzUgMTI3LjI2MTcxOSAiLz4KPHBhdGggc3R5bGU9IiBzdHJva2U6bm9uZTtmaWxsLXJ1bGU6bm9uemVybztmaWxsOnJnYigwJSw1OC40MzEzNzMlLDcyLjE1Njg2MyUpO2ZpbGwtb3BhY2l0eToxOyIgZD0iTSA4My4xMDE1NjIgMCBMIDcxLjk0MTQwNiAwIEMgNTEuNjc5Njg4IDAuNTYyNSAzMC40ODQzNzUgNi45Mjk2ODggMTYuMzIwMzEyIDIzLjAzOTA2MiBDIDEuNDA2MjUgMzkuODk0NTMxIDAgNTQuOTY4NzUgMCA3OS43ODUxNTYgQyAwIDk2LjY0MDYyNSAwIDI1Ny4xNDg0MzggMCAyNTcuMTQ4NDM4IEwgMTIxLjM3NSAyNTcuMTQ4NDM4IEwgMTIxLjM3NSAxODcuNTcwMzEyIEwgMTU5LjgyODEyNSAxODcuNTcwMzEyIEwgMTU5LjgyODEyNSAxNDguNDI1NzgxIEwgODIuNzMwNDY5IDE0OC40MjU3ODEgTCA4Mi43MzA0NjkgMjE4LjU2NjQwNiBMIDM4LjY0NDUzMSAyMTguNTY2NDA2IEwgMzguNjQ0NTMxIDcxLjU0Njg3NSBDIDM4LjY0NDUzMSA3MS41NDY4NzUgMzUuNzM0Mzc1IDM5LjYxMzI4MSA3NC4yODkwNjIgMzguNzY5NTMxIEwgODMuMTA1NDY5IDM4LjM5NDUzMSBMIDgzLjEwNTQ2OSAwICIvPgo8L2c+Cjwvc3ZnPgo=" alt="富邦 Fubon Logo" class="w-14 h-14 md:w-20 md:h-20 mb-4 md:mb-6 mx-auto object-contain">
+                <h1 class="text-3xl sm:text-4xl md:text-6xl font-black text-gray-900 mb-4 md:mb-6 leading-tight">
+                    永續綠色金融<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-fubon to-eco">綜合指南</span>
+                </h1>
+                <p class="text-sm sm:text-base md:text-xl text-gray-600 mb-6 md:mb-8 border-t border-b py-3 md:py-4 max-w-2xl">
+                    永續經濟活動、綠色證券、溫室氣體範疇3<br>
+                    <span class="font-bold text-fubon-dark mt-1.5 md:mt-2 block">三個概念，一次搞懂！</span>
+                </p>
+                <p class="text-xs sm:text-sm text-gray-400">向下滾動開始探索 <i class="fa-solid fa-chevron-down animate-bounce ml-1"></i></p>
+            </div>
+        </section>
+
+        <!-- PAGE 02: 什麼是永續經濟活動 -->
+        <section class="page-section" id="page2">
+            <div class="glass-card p-5 sm:p-7 md:p-10">
+                <div class="flex items-start justify-between gap-3 mb-3 md:mb-4">
+                    <div>
+                        <span class="text-fubon font-bold tracking-wider text-xs md:text-sm mb-0.5 md:mb-1 block">第一部分｜永續經濟活動定義介紹</span>
+                        <h2 class="text-xl sm:text-2xl md:text-3xl font-bold border-b-2 border-fubon inline-block pb-1">什麼是永續經濟活動？</h2>
+                    </div>
+                    <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMjQ4cHQiIGhlaWdodD0iMjU3cHQiIHZpZXdCb3g9IjAgMCAyNDggMjU3IiB2ZXJzaW9uPSIxLjEiPgo8ZyBpZD0ic3VyZmFjZTEiPgo8cGF0aCBzdHlsZT0iIHN0cm9rZTpub25lO2ZpbGwtcnVsZTpub256ZXJvO2ZpbGw6cmdiKDAlLDYzLjUyOTQxMiUsNjEuNTY4NjI3JSk7ZmlsbC1vcGFjaXR5OjE7IiBkPSJNIDE4Ni40Njg3NSAxMjcuMjYxNzE5IEMgMTg2LjQ2ODc1IDEyNy4yNjE3MTkgMTg2LjQ2ODc1IDEyOC4wMTE3MTkgMTg4LjYyNSAxMjkuNTExNzE5IEMgMjAyLjMyMDMxMiAxNDAuNTU4NTk0IDIwOS42MzY3MTkgMTUxLjIzODI4MSAyMDkuNTQyOTY5IDE3Mi45NjA5MzggQyAyMDkuNDQ5MjE5IDIwMC4xMTcxODggMTg1LjgxMjUgMjE5Ljc4MTI1IDE1OS4wODIwMzEgMjE5Ljc4MTI1IEwgMTU5LjA4MjAzMSAyNTcuMjQyMTg4IEMgMjA1LjY5NTMxMiAyNTcuMjQyMTg4IDI0OCAyMjQuMDg5ODQ0IDI0OCAxNzYuNzk2ODc1IEMgMjQ4IDE1OS44NDc2NTYgMjQzLjQwMjM0NCAxNDMuMTc5Njg4IDIzMS44NjMyODEgMTI2Ljk4NDM3NSBDIDIzMi40Mjk2ODggMTI2LjMyNDIxOSAyMzQuODY3MTg4IDEyMy40MjE4NzUgMjM2LjkzMzU5NCAxMTkuNzczNDM4IEMgMjM5Ljc0NjA5NCAxMTQuNzE0ODQ0IDI0MC4zMDg1OTQgMTA4LjYyNSAyNDAuMzA4NTk0IDg4LjMwODU5NCBMIDI0MC4zMDg1OTQgMCBMIDEyMC44MDg1OTQgMCBMIDEyMC44MDg1OTQgNzAuMzI0MjE5IEwgODIuNzMwNDY5IDcwLjMyNDIxOSBMIDgyLjczMDQ2OSAxMDkgTCAxNTkuNzM0Mzc1IDEwOSBMIDE1OS43MzQzNzUgMzkuNjEzMjgxIEwgMjAyLjY5NTMxMiAzOS42MTMyODEgTCAyMDIuNjk1MzEyIDk5LjQ0OTIxOSBDIDIwMi42OTUzMTIgOTkuNDQ5MjE5IDIwNC40NzY1NjIgMTE2LjIxMDkzOCAxODYuNDY4NzUgMTI3LjI2MTcxOSAiLz4KPHBhdGggc3R5bGU9IiBzdHJva2U6bm9uZTtmaWxsLXJ1bGU6bm9uemVybztmaWxsOnJnYigwJSw1OC40MzEzNzMlLDcyLjE1Njg2MyUpO2ZpbGwtb3BhY2l0eToxOyIgZD0iTSA4My4xMDE1NjIgMCBMIDcxLjk0MTQwNiAwIEMgNTEuNjc5Njg4IDAuNTYyNSAzMC40ODQzNzUgNi45Mjk2ODggMTYuMzIwMzEyIDIzLjAzOTA2MiBDIDEuNDA2MjUgMzkuODk0NTMxIDAgNTQuOTY4NzUgMCA3OS43ODUxNTYgQyAwIDk2LjY0MDYyNSAwIDI1Ny4xNDg0MzggMCAyNTcuMTQ4NDM4IEwgMTIxLjM3NSAyNTcuMTQ4NDM4IEwgMTIxLjM3NSAxODcuNTcwMzEyIEwgMTU5LjgyODEyNSAxODcuNTcwMzEyIEwgMTU5LjgyODEyNSAxNDguNDI1NzgxIEwgODIuNzMwNDY5IDE0OC40MjU3ODEgTCA4Mi43MzA0NjkgMjE4LjU2NjQwNiBMIDM4LjY0NDUzMSAyMTguNTY2NDA2IEwgMzguNjQ0NTMxIDcxLjU0Njg3NSBDIDM4LjY0NDUzMSA3MS41NDY4NzUgMzUuNzM0Mzc1IDM5LjYxMzI4MSA3NC4yODkwNjIgMzguNzY5NTMxIEwgODMuMTA1NDY5IDM4LjM5NDUzMSBMIDgzLjEwNTQ2OSAwICIvPgo8L2c+Cjwvc3ZnPgo=" alt="富邦 Fubon Logo" class="page-logo shrink-0">
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-3.5 md:gap-6 my-auto">
+                    <div class="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border-l-4 border-eco flex flex-col justify-between hover:shadow-md transition">
+                        <div>
+                            <div class="flex items-center mb-2.5 md:mb-4 text-eco-dark text-lg md:text-xl font-bold">
+                                <i class="fa-solid fa-seedling mr-2.5 text-xl md:text-2xl"></i> 定義
+                            </div>
+                            <p class="text-gray-700 leading-relaxed text-sm md:text-base">
+                                簡單說，就是指企業從事的經濟活動，能夠對環境產生<strong class="text-eco-dark">正面貢獻</strong>，同時不會對其他環境因素或社會造成重大傷害。
+                            </p>
+                        </div>
+                        <div class="mt-3.5 md:mt-6 bg-eco-light p-3 md:p-4 rounded-xl text-eco-dark font-medium text-xs md:text-sm">
+                            💡 換句話說，這些是「有益無害」的商業活動——幫助實現淨零目標，同時保護環境和社會。
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border-l-4 border-fubon flex flex-col justify-between hover:shadow-md transition">
+                        <div>
+                            <div class="flex items-center mb-2.5 md:mb-4 text-fubon-dark text-lg md:text-xl font-bold">
+                                <i class="fa-solid fa-bullseye mr-2.5 text-xl md:text-2xl"></i> 為什麼要認定？
+                            </div>
+                            <p class="text-gray-700 leading-relaxed text-sm md:text-base">
+                                政府透過指引，鼓勵企業識別自身的永續活動，幫助投資者評估資金流向，<strong class="text-fubon-dark">引導更多資本投入到綠色轉型中</strong>。
+                            </p>
+                        </div>
+                        <p class="mt-3.5 md:mt-6 text-gray-600 bg-gray-50 p-3 md:p-4 rounded-xl border border-gray-100 text-xs md:text-sm">
+                            ⚠️ 非強制性要求，而是鼓勵企業主動向市場展現自身永續承諾與實質成效。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 03: 三個條件 -->
+        <section class="page-section" id="page3">
+            <div class="glass-card p-5 sm:p-7 md:p-10">
+                <div class="flex items-start justify-between gap-3 mb-3 md:mb-4">
+                    <div>
+                        <span class="text-fubon font-bold tracking-wider text-xs md:text-sm mb-0.5 md:mb-1 block">第一部分｜認定方法</span>
+                        <h2 class="text-xl sm:text-2xl md:text-3xl font-bold border-b-2 border-fubon inline-block pb-1">必須滿足的三大條件</h2>
+                    </div>
+                    <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMjQ4cHQiIGhlaWdodD0iMjU3cHQiIHZpZXdCb3g9IjAgMCAyNDggMjU3IiB2ZXJzaW9uPSIxLjEiPgo8ZyBpZD0ic3VyZmFjZTEiPgo8cGF0aCBzdHlsZT0iIHN0cm9rZTpub25lO2ZpbGwtcnVsZTpub256ZXJvO2ZpbGw6cmdiKDAlLDYzLjUyOTQxMiUsNjEuNTY4NjI3JSk7ZmlsbC1vcGFjaXR5OjE7IiBkPSJN IDE4Ni40Njg3NSAxMjcuMjYxNzE5IEMgMTg2LjQ2ODc1IDEyNy4yNjE3MTkgMTg2LjQ2ODc1IDEyOC4wMTE3MTkgMTg4LjYyNSAxMjkuNTExNzE5IEMgMjAyLjMyMDMxMiAxNDAuNTU4NTk0IDIwOS42MzY3MTkgMTUxLjIzODI4MSAyMDkuNTQyOTY5IDE3Mi45NjA5MzggQyAyMDkuNDQ5MjE5IDIwMC4xMTcxODggMTg1LjgxMjUgMjE5Ljc4MTI1IDE1OS4wODIwMzEgMjE5Ljc4MTI1IEwgMTU5LjA4MjAzMSAyNTcuMjQyMTg4IEMgMjA1LjY5NTMxMiAyNTcuMjQyMTg4IDI0OCAyMjQuMDg5ODQ0IDI0OCAxNzYuNzk2ODc1IEMgMjQ4IDE1OS44NDc2NTYgMjQzLjQwMjM0NCAxNDMuMTc5Njg4IDIzMS44NjMyODEgMTI2Ljk4NDM3NSBDIDIzMi40Mjk2ODggMTI2LjMyNDIxOSAyMzQuODY3MTg4IDEyMy40MjE4NzUgMjM2LjkzMzU5NCAxMTkuNzczNDM4IEMgMjM5Ljc0NjA5NCAxMTQuNzE0ODQ0IDI0MC4zMDg1OTQgMTA4LjYyNSAyNDAuMzA4NTk0IDg4LjMwODU5NCBMIDI0MC4zMDg1OTQgMCBMIDEyMC44MDg1OTQgMCBMIDEyMC44MDg1OTQgNzAuMzI0MjE5IEwgODIuNzMwNDY5IDcwLjMyNDIxOSBMIDgyLjczMDQ2OSAxMDkgTCAxNTkuNzM0Mzc1IDEwOSBMIDE1OS43MzQzNzUgMzkuNjEzMjgxIEwgMjAyLjY5NTMxMiAzOS42MTMyODEgTCAyMDIuNjk1MzEyIDk5LjQ0OTIxOSBDIDIwMi42OTUzMTIgOTkuNDQ5MjE5IDIwNC40NzY1NjIgMTE2LjIxMDkzOCAxODYuNDY4NzUgMTI3LjI2MTcxOSAiLz4KPHBhdGggc3R5bGU9IiBzdHJva2U6bm9uZTtmaWxsLXJ1bGU6bm9uemVybztmaWxsOnJnYigwJSw1OC40MzEzNzMlLDcyLjE1Njg2MyUpO2ZpbGwtb3BhY2l0eToxOyIgZD0iTSA4My4xMDE1NjIgMCBMIDcxLjk0MTQwNiAwIEMgNTEuNjc5Njg4IDAuNTYyNSAzMC40ODQzNzUgNi45Mjk2ODggMTYuMzIwMzEyIDIzLjAzOTA2MiBDIDEuNDA2MjUgMzkuODk0NTMxIDAgNTQuOTY4NzUgMCA3OS43ODUxNTYgQyAwIDk2LjY0MDYyNSAwIDI1Ny4xNDg0MzggMCAyNTcuMTQ4NDM4IEwgMTIxLjM3NSAyNTcuMTQ4NDM4IEwgMTIxLjM3NSAxODcuNTcwMzEyIEwgMTU5LjgyODEyNSAxODcuNTcwMzEyIEwgMTU5LjgyODEyNSAxNDguNDI1NzgxIEwgODIuNzMwNDY5IDE0OC40MjU3ODEgTCA4Mi43MzA0NjkgMjE4LjU2NjQwNiBMIDM4LjY0NDUzMSAyMTguNTY2NDA2IEwgMzguNjQ0NTMxIDcxLjU0Njg3NSBDIDM4LjY0NDUzMSA3MS41NDY4NzUgMzUuNzM0Mzc1IDM5LjYxMzI4MSA3NC4yODkwNjIgMzguNzY5NTMxIEwgODMuMTA1NDY5IDM4LjM5NDUzMSBMIDgzLjEwNTQ2OSAwICIvPgo8L2c+Cjwvc3ZnPgo=" alt="富邦 Fubon Logo" class="page-logo shrink-0">
+                </div>
+                
+                <div class="space-y-2.5 md:space-y-4 my-auto">
+                    <div class="flex items-start sm:items-center bg-white rounded-xl sm:rounded-2xl p-3 sm:p-4 shadow-sm border border-gray-100">
+                        <div class="flex-shrink-0 w-8 h-8 sm:w-12 sm:h-12 bg-eco-light text-eco-dark rounded-full flex items-center justify-center text-sm sm:text-xl font-bold mr-3 sm:mr-5 mt-0.5 sm:mt-0">1</div>
+                        <div class="flex-1 min-w-0">
+                            <h3 class="text-xs sm:text-base md:text-lg font-bold text-gray-800 mb-1">對任一環境目的有實質貢獻</h3>
+                            <div class="flex flex-wrap gap-1.5 text-[10px] sm:text-xs">
+                                <span class="bg-gray-100 px-2 py-0.5 rounded-full"><i class="fa-solid fa-temperature-arrow-down text-fubon"></i> 氣候減緩</span>
+                                <span class="bg-gray-100 px-2 py-0.5 rounded-full"><i class="fa-solid fa-umbrella text-fubon"></i> 氣候調適</span>
+                                <span class="bg-gray-100 px-2 py-0.5 rounded-full"><i class="fa-solid fa-water text-fubon"></i> 水及海洋</span>
+                                <span class="bg-gray-100 px-2 py-0.5 rounded-full"><i class="fa-solid fa-recycle text-fubon"></i> 循環經濟</span>
+                                <span class="bg-gray-100 px-2 py-0.5 rounded-full"><i class="fa-solid fa-smog text-fubon"></i> 污染防治</span>
+                                <span class="bg-gray-100 px-2 py-0.5 rounded-full"><i class="fa-solid fa-bug text-fubon"></i> 生物多樣性</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-start sm:items-center bg-white rounded-xl sm:rounded-2xl p-3 sm:p-4 shadow-sm border border-gray-100">
+                        <div class="flex-shrink-0 w-8 h-8 sm:w-12 sm:h-12 bg-fubon-light text-fubon-dark rounded-full flex items-center justify-center text-sm sm:text-xl font-bold mr-3 sm:mr-5 mt-0.5 sm:mt-0">2</div>
+                        <div class="flex-1 min-w-0">
+                            <h3 class="text-xs sm:text-base md:text-lg font-bold text-gray-800 mb-0.5">對六項環境目的未造成重大危害</h3>
+                            <p class="text-[11px] sm:text-xs md:text-sm text-gray-600">追求單一環境目標時，不得對其餘五項造成重大負面影響。</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start sm:items-center bg-white rounded-xl sm:rounded-2xl p-3 sm:p-4 shadow-sm border border-gray-100">
+                        <div class="flex-shrink-0 w-8 h-8 sm:w-12 sm:h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm sm:text-xl font-bold mr-3 sm:mr-5 mt-0.5 sm:mt-0">3</div>
+                        <div class="flex-1 min-w-0">
+                            <h3 class="text-xs sm:text-base md:text-lg font-bold text-gray-800 mb-0.5">對社會保障未造成重大危害</h3>
+                            <p class="text-[11px] sm:text-xs md:text-sm text-gray-600">遵守聯合國人權公約與勞工基準法規，無重大違法情事。</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center bg-fubon text-white p-2.5 sm:p-3.5 rounded-xl font-bold text-xs sm:text-base md:text-lg shadow-md mt-2">
+                    ✨ 三個條件皆滿足 ＝ 符合永續經濟活動 ✨
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 04: 分類速覽 -->
+        <section class="page-section" id="page4">
+            <div class="glass-card p-5 sm:p-7 md:p-10">
+                <div class="flex items-start justify-between gap-3 mb-2 md:mb-4">
+                    <div>
+                        <span class="text-fubon font-bold tracking-wider text-xs md:text-sm mb-0.5 md:mb-1 block">第一部分｜經濟活動</span>
+                        <h2 class="text-xl sm:text-2xl md:text-3xl font-bold border-b-2 border-fubon inline-block pb-1">活動分類速覽</h2>
+                    </div>
+                    <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMjQ4cHQiIGhlaWdodD0iMjU3cHQiIHZpZXdCb3g9IjAgMCAyNDggMjU3IiB2ZXJzaW9uPSIxLjEiPgo8ZyBpZD0ic3VyZmFjZTEiPgo8cGF0aCBzdHlsZT0iIHN0cm9rZTpub25lO2ZpbGwtcnVsZTpub256ZXJvO2ZpbGw6cmdiKDAlLDYzLjUyOTQxMiUsNjEuNTY4NjI3JSk7ZmlsbC1vcGFjaXR5OjE7IiBkPSJN IDE4Ni40Njg3NSAxMjcuMjYxNzE5IEMgMTg2LjQ2ODc1IDEyNy4yNjE3MTkgMTg2LjQ2ODc1IDEyOC4wMTE3MTkgMTg4LjYyNSAxMjkuNTExNzE5IEMgMjAyLjMyMDMxMiAxNDAuNTU4NTk0IDIwOS42MzY3MTkgMTUxLjIzODI4MSAyMDkuNTQyOTY5IDE3Mi45NjA5MzggQyAyMDkuNDQ5MjE5IDIwMC4xMTcxODggMTg1LjgxMjUgMjE5Ljc4MTI1IDE1OS4wODIwMzEgMjE5Ljc4MTI1IEwgMTU5LjA4MjAzMSAyNTcuMjQyMTg4IEMgMjA1LjY5NTMxMiAyNTcuMjQyMTg4IDI0OCAyMjQuMDg5ODQ0IDI0OCAxNzYuNzk2ODc1IEMgMjQ4IDE1OS44NDc2NTYgMjQzLjQwMjM0NCAxNDMuMTc5Njg4IDIzMS44NjMyODEgMTI2Ljk4NDM3NSBDIDIzMi40Mjk2ODggMTI2LjMyNDIxOSAyMzQuODY3MTg4IDEyMy40MjE4NzUgMjM2LjkzMzU5NCAxMTkuNzczNDM4IEMgMjM5Ljc0NjA5NCAxMTQuNzE0ODQ0IDI0MC4zMDg1OTQgMTA4LjYyNSAyNDAuMzA4NTk0IDg4LjMwODU5NCBMIDI0MC4zMDg1OTQgMCBMIDEyMC44MDg1OTQgMCBMIDEyMC44MDg1OTQgNzAuMzI0MjE5IEwgODIuNzMwNDY5IDcwLjMyNDIxOSBMIDgyLjczMDQ2OSAxMDkgTCAxNTkuNzM0Mzc1IDEwOSBMIDE1OS43MzQzNzUgMzkuNjEzMjgxIEwgMjAyLjY5NTMxMiAzOS42MTMyODEgTCAyMDIuNjk1MzEyIDk5LjQ0OTIxOSBDIDIwMi42OTUzMTIgOTkuNDQ5MjE5IDIwNC40NzY1NjIgMTE2LjIxMDkzOCAxODYuNDY4NzUgMTI3LjI2MTcxOSAiLz4KPHBhdGggc3R5bGU9IiBzdHJva2U6bm9uZTtmaWxsLXJ1bGU6bm9uemVybztmaWxsOnJnYigwJSw1OC40MzEzNzMlLDcyLjE1Njg2MyUpO2ZpbGwtb3BhY2l0eToxOyIgZD0iTSA4My4xMDE1NjIgMCBMIDcxLjk0MTQwNiAwIEMgNTEuNjc5Njg4IDAuNTYyNSAzMC40ODQzNzUgNi45Mjk2ODggMTYuMzIwMzEyIDIzLjAzOTA2MiBDIDEuNDA2MjUgMzkuODk0NTMxIDAgNTQuOTY4NzUgMCA3OS43ODUxNTYgQyAwIDk2LjY0MDYyNSAwIDI1Ny4xNDg0MzggMCAyNTcuMTQ4NDM4IEwgMTIxLjM3NSAyNTcuMTQ4NDM4IEwgMTIxLjM3NSAxODcuNTcwMzEyIEwgMTU5LjgyODEyNSAxODcuNTcwMzEyIEwgMTU5LjgyODEyNSAxNDguNDI1NzgxIEwgODIuNzMwNDY5IDE0OC40MjU3ODEgTCA4Mi43MzA0NjkgMjE4LjU2NjQwNiBMIDM4LjY0NDUzMSAyMTguNTY2NDA2IEwgMzguNjQ0NTMxIDcxLjU0Njg3NSBDIDM4LjY0NDUzMSA3MS41NDY4NzUgMzUuNzM0Mzc1IDM5LjYxMzI4MSA3NC4yODkwNjIgMzguNzY5NTMxIEwgODMuMTA1NDY5IDM4LjM5NDUzMSBMIDgzLjEwNTQ2OSAwICIvPgo8L2c+Cjwvc3ZnPgo=" alt="富邦 Fubon Logo" class="page-logo shrink-0">
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-3.5 md:gap-6 my-auto">
+                    <div class="bg-white rounded-xl sm:rounded-2xl p-3.5 sm:p-5 shadow-sm border border-gray-100 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-sm sm:text-base md:text-lg font-bold text-fubon-dark mb-1.5 flex items-center">
+                                <i class="fa-solid fa-industry mr-1.5"></i> 【一般經濟活動】<span class="text-[11px] text-gray-500 ml-1 font-normal">已有具體應用產業</span>
+                            </h3>
+                            <p class="mb-2 text-[10px] sm:text-xs font-bold bg-gray-100 inline-block px-2 py-0.5 rounded">5 大產業、29 項活動：</p>
+                            <ul class="space-y-1.5 text-gray-700 text-xs md:text-sm">
+                                <li><i class="fa-solid fa-check text-eco mr-1"></i><strong>製造業：</strong> 水泥/石化/鋼鐵/半導體等9項</li>
+                                <li><i class="fa-solid fa-check text-eco mr-1"></i><strong>營造建築與不動產：</strong> 綠建築/改繕等7項</li>
+                                <li><i class="fa-solid fa-check text-eco mr-1"></i><strong>運輸倉儲業：</strong> 軌道/客貨運/基建等7項</li>
+                                <li><i class="fa-solid fa-check text-eco mr-1"></i><strong>廢棄物清理回收：</strong> 處理/再利用共3項</li>
+                                <li><i class="fa-solid fa-check text-eco mr-1"></i><strong>農林業：</strong> 農作/林業/資源再利用共3項</li>
+                            </ul>
+                        </div>
+                        <div class="mt-2.5 p-2 bg-yellow-50 text-yellow-800 text-[11px] rounded border border-yellow-200">
+                            五大產業授信餘額約佔全國 64%，為金融機構焦點！
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl sm:rounded-2xl p-3.5 sm:p-5 shadow-sm border border-gray-100 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-sm sm:text-base md:text-lg font-bold text-eco-dark mb-1.5 flex items-center">
+                                <i class="fa-solid fa-lightbulb mr-1.5"></i> 【支持型經濟活動】<span class="text-[11px] text-gray-500 ml-1 font-normal">轉型技術/基建(14項)</span>
+                            </h3>
+                            <div class="grid grid-cols-2 gap-1.5 text-[11px] text-gray-700">
+                                <div class="bg-gray-50 p-1.5 rounded truncate"><i class="fa-solid fa-solar-panel text-fubon mr-1"></i>1. 再生能源配件</div>
+                                <div class="bg-gray-50 p-1.5 rounded truncate"><i class="fa-solid fa-atom text-fubon mr-1"></i>2. 氫能應用研發</div>
+                                <div class="bg-gray-50 p-1.5 rounded truncate"><i class="fa-solid fa-network-wired text-fubon mr-1"></i>3. 智慧電網基建</div>
+                                <div class="bg-gray-50 p-1.5 rounded truncate"><i class="fa-solid fa-microchip text-fubon mr-1"></i>4. 高能效設備製造</div>
+                                <div class="bg-gray-50 p-1.5 rounded truncate"><i class="fa-solid fa-ship text-fubon mr-1"></i>5. 低碳水運基建</div>
+                                <div class="bg-gray-50 p-1.5 rounded truncate"><i class="fa-solid fa-cloud text-fubon mr-1"></i>6. 碳捕捉封存(CCUS)</div>
+                                <div class="bg-gray-50 p-1.5 rounded truncate"><i class="fa-solid fa-plug text-fubon mr-1"></i>7. 能源技術服務</div>
+                                <div class="bg-gray-50 p-1.5 rounded truncate"><i class="fa-solid fa-bowl-food text-fubon mr-1"></i>8. 替代食品研發</div>
+                                <div class="bg-gray-50 p-1.5 rounded truncate"><i class="fa-solid fa-tree text-fubon mr-1"></i>9. 自然碳匯技術</div>
+                                <div class="bg-gray-50 p-1.5 rounded truncate"><i class="fa-solid fa-car-battery text-fubon mr-1"></i>10. 儲能設施配件</div>
+                                <div class="bg-gray-50 p-1.5 rounded truncate"><i class="fa-solid fa-cloud-sun-rain text-fubon mr-1"></i>11. 氣候調適工程</div>
+                                <div class="bg-gray-50 p-1.5 rounded truncate"><i class="fa-solid fa-faucet-drip text-fubon mr-1"></i>12. 節水水資源循環</div>
+                                <div class="bg-gray-50 p-1.5 rounded truncate"><i class="fa-solid fa-recycle text-fubon mr-1"></i>13. 低碳循環經濟</div>
+                                <div class="bg-gray-50 p-1.5 rounded truncate"><i class="fa-solid fa-shield-cat text-fubon mr-1"></i>14. 生態保護系統</div>
+                            </div>
+                        </div>
+                        <div class="mt-2.5 p-1.5 bg-eco-light/50 text-eco-dark text-[11px] rounded text-center font-medium">
+                            前瞻賦能產業轉型，促進全面淨零生態圈
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 05: 企業如何應用 -->
+        <section class="page-section" id="page5">
+            <div class="glass-card p-5 sm:p-7 md:p-10">
+                <div class="flex items-start justify-between gap-3 mb-2 md:mb-4">
+                    <div>
+                        <span class="text-fubon font-bold tracking-wider text-xs md:text-sm mb-0.5 md:mb-1 block">第一部分｜企業實戰</span>
+                        <h2 class="text-xl sm:text-2xl md:text-3xl font-bold border-b-2 border-fubon inline-block pb-1">企業如何應用永續指引</h2>
+                    </div>
+                    <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMjQ4cHQiIGhlaWdodD0iMjU3cHQiIHZpZXdCb3g9IjAgMCAyNDggMjU3IiB2ZXJzaW9uPSIxLjEiPgo8ZyBpZD0ic3VyZmFjZTEiPgo8cGF0aCBzdHlsZT0iIHN0cm9rZTpub25lO2ZpbGwtcnVsZTpub256ZXJvO2ZpbGw6cmdiKDAlLDYzLjUyOTQxMiUsNjEuNTY4NjI3JSk7ZmlsbC1vcGFjaXR5OjE7IiBkPSJN IDE4Ni40Njg3NSAxMjcuMjYxNzE5IEMgMTg2LjQ2ODc1IDEyNy4yNjE3MTkgMTg2LjQ2ODc1IDEyOC4wMTE3MTkgMTg4LjYyNSAxMjkuNTExNzE5IEMgMjAyLjMyMDMxMiAxNDAuNTU4NTk0IDIwOS42MzY3MTkgMTUxLjIzODI4MSAyMDkuNTQyOTY5IDE3Mi45NjA5MzggQyAyMDkuNDQ5MjE5IDIwMC4xMTcxODggMTg1LjgxMjUgMjE5Ljc4MTI1IDE1OS4wODIwMzEgMjE5Ljc4MTI1IEwgMTU5LjA4MjAzMSAyNTcuMjQyMTg4IEMgMjA1LjY5NTMxMiAyNTcuMjQyMTg4IDI0OCAyMjQuMDg5ODQ0IDI0OCAxNzYuNzk2ODc1IEMgMjQ4IDE1OS44NDc2NTYgMjQzLjQwMjM0NCAxNDMuMTc5Njg4IDIzMS44NjMyODEgMTI2Ljk4NDM3NSBDIDIzMi40Mjk2ODggMTI2LjMyNDIxOSAyMzQuODY3MTg4IDEyMy40MjE4NzUgMjM2LjkzMzU5NCAxMTkuNzczNDM4IEMgMjM5Ljc0NjA5NCAxMTQuNzE0ODQ0IDI0MC4zMDg1OTQgMTA4LjYyNSAyNDAuMzA4NTk0IDg4LjMwODU5NCBMIDI0MC4zMDg1OTQgMCBMIDEyMC44MDg1OTQgMCBMIDEyMC44MDg1OTQgNzAuMzI0MjE5IEwgODIuNzMwNDY5IDcwLjMyNDIxOSBMIDgyLjczMDQ2OSAxMDkgTCAxNTkuNzM0Mzc1IDEwOSBMIDE1OS43MzQzNzUgMzkuNjEzMjgxIEwgMjAyLjY5NTMxMiAzOS42MTMyODEgTCAyMDIuNjk1MzEyIDk5LjQ0OTIxOSBDIDIwMi42OTUzMTIgOTkuNDQ5MjE5IDIwNC40NzY1NjIgMTE2LjIxMDkzOCAxODYuNDY4NzUgMTI3LjI2MTcxOSAiLz4KPHBhdGggc3R5bGU9IiBzdHJva2U6bm9uZTtmaWxsLXJ1bGU6bm9uemVybztmaWxsOnJnYigwJSw1OC40MzEzNzMlLDcyLjE1Njg2MyUpO2ZpbGwtb3BhY2l0eToxOyIgZD0iTSA4My4xMDE1NjIgMCBMIDcxLjk0MTQwNiAwIEMgNTEuNjc5Njg4IDAuNTYyNSAzMC40ODQzNzUgNi45Mjk2ODggMTYuMzIwMzEyIDIzLjAzOTA2MiBDIDEuNDA2MjUgMzkuODk0NTMxIDAgNTQuOTY4NzUgMCA3OS43ODUxNTYgQyAwIDk2LjY0MDYyNSAwIDI1Ny4xNDg0MzggMCAyNTcuMTQ4NDM4IEwgMTIxLjM3NSAyNTcuMTQ4NDM4IEwgMTIxLjM3NSAxODcuNTcwMzEyIEwgMTU5LjgyODEyNSAxODcuNTcwMzEyIEwgMTU5LjgyODEyNSAxNDguNDI1NzgxIEwgODIuNzMwNDY5IDE0OC40MjU3ODEgTCA4Mi43MzA0NjkgMjE4LjU2NjQwNiBMIDM4LjY0NDUzMSAyMTguNTY2NDA2IEwgMzguNjQ0NTMxIDcxLjU0Njg3NSBDIDM4LjY0NDUzMSA3MS41NDY4NzUgMzUuNzM0Mzc1IDM5LjYxMzI4MSA3NC4yODkwNjIgMzguNzY5NTMxIEwgODMuMTA1NDY5IDM4LjM5NDUzMSBMIDgzLjEwNTQ2OSAwICIvPgo8L2c+Cjwvc3ZnPgo=" alt="富邦 Fubon Logo" class="page-logo shrink-0">
+                </div>
+                
+                <div class="my-auto space-y-3 md:space-y-5">
+                    <div>
+                        <h3 class="text-sm sm:text-base md:text-lg font-bold text-gray-800 mb-2 flex items-center gap-1.5">
+                            <span class="w-2 h-4 bg-fubon rounded-full"></span>
+                            企業指引導入 3 步驟
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5 sm:gap-3.5">
+                            <div class="bg-white p-3 sm:p-4 rounded-xl sm:rounded-2xl shadow-sm border border-gray-100">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="w-6 h-6 rounded-full bg-fubon text-white font-black text-xs flex items-center justify-center">1</span>
+                                    <h4 class="font-bold text-gray-800 text-xs sm:text-sm md:text-base">辨識適用項目</h4>
+                                </div>
+                                <p class="text-[11px] sm:text-xs text-gray-500 leading-relaxed">對照 29 項一般與 14 項支持型活動，盤點營運適用項目。</p>
+                            </div>
+                            <div class="bg-white p-3 sm:p-4 rounded-xl sm:rounded-2xl shadow-sm border border-gray-100">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="w-6 h-6 rounded-full bg-fubon text-white font-black text-xs flex items-center justify-center">2</span>
+                                    <h4 class="font-bold text-gray-800 text-xs sm:text-sm md:text-base">評定永續程度</h4>
+                                </div>
+                                <p class="text-[11px] sm:text-xs text-gray-500 leading-relaxed">依三大條件評定（<span class="text-green-700 font-semibold">符合</span> / <span class="text-yellow-700 font-semibold">轉型中</span> / <span class="text-red-700 font-semibold">不符合</span>）。</p>
+                            </div>
+                            <div class="bg-white p-3 sm:p-4 rounded-xl sm:rounded-2xl shadow-sm border border-gray-100">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="w-6 h-6 rounded-full bg-fubon text-white font-black text-xs flex items-center justify-center">3</span>
+                                    <h4 class="font-bold text-gray-800 text-xs sm:text-sm md:text-base">制定轉型計畫</h4>
+                                </div>
+                                <p class="text-[11px] sm:text-xs text-gray-500 leading-relaxed">訂定治理架構、減碳路徑與預算，逐步朝向符合永續。</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl sm:rounded-2xl p-3 sm:p-5 shadow-sm border border-gray-100">
+                        <h3 class="text-xs sm:text-base font-bold mb-2 text-fubon-dark flex items-center gap-1.5">
+                            <i class="fa-solid fa-briefcase"></i> 企業實務應用與對外對接
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-2 sm:gap-3 text-xs md:text-sm text-gray-700">
+                            <div class="flex items-start gap-2 bg-gray-50 p-2.5 rounded-xl">
+                                <i class="fa-solid fa-bullhorn text-fubon text-sm mt-0.5 shrink-0"></i>
+                                <div>
+                                    <strong class="text-gray-900 block font-bold text-xs">自願資訊揭露</strong>
+                                    <span class="text-gray-500 text-[11px]">於年報、ESG報告書揭露成果。</span>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-2 bg-gray-50 p-2.5 rounded-xl">
+                                <i class="fa-solid fa-sack-dollar text-fubon text-sm mt-0.5 shrink-0"></i>
+                                <div>
+                                    <strong class="text-gray-900 block font-bold text-xs">爭取綠色融資</strong>
+                                    <span class="text-gray-500 text-[11px]">提供銀行評估，獲取綠色授信。</span>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-2 bg-gray-50 p-2.5 rounded-xl">
+                                <i class="fa-solid fa-desktop text-fubon text-sm mt-0.5 shrink-0"></i>
+                                <div>
+                                    <strong class="text-gray-900 block font-bold text-xs">聯徵數位平台</strong>
+                                    <span class="text-gray-500 text-[11px]">上傳自評問卷，增加綠色能見度。</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-t pt-2 md:pt-3 text-center font-bold text-eco-dark text-xs sm:text-base md:text-lg">
+                    核心效益：增投資人信心 🚀 吸引綠色資金 💰 提升評價 📈
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 06: 綠色證券認證 -->
+        <section class="page-section" id="page6">
+            <div class="glass-card p-5 sm:p-7 md:p-10">
+                <div class="flex items-start justify-between gap-3 mb-2 md:mb-4">
+                    <div>
+                        <span class="text-fubon font-bold tracking-wider text-xs md:text-sm mb-0.5 md:mb-1 block">第二部分｜綠色證券認證制度</span>
+                        <h2 class="text-xl sm:text-2xl md:text-3xl font-bold border-b-2 border-fubon inline-block pb-1">什麼是綠色證券認證？</h2>
+                    </div>
+                    <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMjQ4cHQiIGhlaWdodD0iMjU3cHQiIHZpZXdCb3g9IjAgMCAyNDggMjU3IiB2ZXJzaW9uPSIxLjEiPgo8ZyBpZD0ic3VyZmFjZTEiPgo8cGF0aCBzdHlsZT0iIHN0cm9rZTpub25lO2ZpbGwtcnVsZTpub256ZXJvO2ZpbGw6cmdiKDAlLDYzLjUyOTQxMiUsNjEuNTY4NjI3JSk7ZmlsbC1vcGFjaXR5OjE7IiBkPSJN IDE4Ni40Njg3NSAxMjcuMjYxNzE5IEMgMTg2LjQ2ODc1IDEyNy4yNjE3MTkgMTg2LjQ2ODc1IDEyOC4wMTE3MTkgMTg4LjYyNSAxMjkuNTExNzE5IEMgMjAyLjMyMDMxMiAxNDAuNTU4NTk0IDIwOS42MzY3MTkgMTUxLjIzODI4MSAyMDkuNTQyOTY5IDE3Mi45NjA5MzggQyAyMDkuNDQ5MjE5IDIwMC4xMTcxODggMTg1LjgxMjUgMjE5Ljc4MTI1IDE1OS4wODIwMzEgMjE5Ljc4MTI1IEwgMTU5LjA4MjAzMSAyNTcuMjQyMTg4IEMgMjA1LjY5NTMxMiAyNTcuMjQyMTg4IDI0OCAyMjQuMDg5ODQ0IDI0OCAxNzYuNzk2ODc1IEMgMjQ4IDE1OS44NDc2NTYgMjQzLjQwMjM0NCAxNDMuMTc5Njg4IDIzMS44NjMyODEgMTI2Ljk4NDM3NSBDIDIzMi40Mjk2ODggMTI2LjMyNDIxOSAyMzQuODY3MTg4IDEyMy40MjE4NzUgMjM2LjkzMzU5NCAxMTkuNzczNDM4IEMgMjM5Ljc0NjA5NCAxMTQuNzE0ODQ0IDI0MC4zMDg1OTQgMTA4LjYyNSAyNDAuMzA4NTk0IDg4LjMwODU5NCBMIDI0MC4zMDg1OTQgMCBMIDEyMC44MDg1OTQgMCBMIDEyMC44MDg1OTQgNzAuMzI0MjE5IEwgODIuNzMwNDY5IDcwLjMyNDIxOSBMIDgyLjczMDQ2OSAxMDkgTCAxNTkuNzM0Mzc1IDEwOSBMIDE1OS43MzQzNzUgMzkuNjEzMjgxIEwgMjAyLjY5NTMxMiAzOS42MTMyODEgTCAyMDIuNjk1MzEyIDk5LjQ0OTIxOSBDIDIwMi42OTUzMTIgOTkuNDQ5MjE5IDIwNC40NzY1NjIgMTE2LjIxMDkzOCAxODYuNDY4NzUgMTI3LjI2MTcxOSAiLz4KPHBhdGggc3R5bGU9IiBzdHJva2U6bm9uZTtmaWxsLXJ1bGU6bm9uemVybztmaWxsOnJnYigwJSw1OC40MzEzNzMlLDcyLjE1Njg2MyUpO2ZpbGwtb3BhY2l0eToxOyIgZD0iTSA4My4xMDE1NjIgMCBMIDcxLjk0MTQwNiAwIEMgNTEuNjc5Njg4IDAuNTYyNSAzMC40ODQzNzUgNi45Mjk2ODggMTYuMzIwMzEyIDIzLjAzOTA2MiBDIDEuNDA2MjUgMzkuODk0NTMxIDAgNTQuOTY4NzUgMCA3OS43ODUxNTYgQyAwIDk2LjY0MDYyNSAwIDI1Ny4xNDg0MzggMCAyNTcuMTQ4NDM4IEwgMTIxLjM3NSAyNTcuMTQ4NDM4IEwgMTIxLjM3NSAxODcuNTcwMzEyIEwgMTU5LjgyODEyNSAxODcuNTcwMzEyIEwgMTU5LjgyODEyNSAxNDguNDI1NzgxIEwgODIuNzMwNDY5IDE0OC40MjU3ODEgTCA4Mi43MzA0NjkgMjE4LjU2NjQwNiBMIDM4LjY0NDUzMSAyMTguNTY2NDA2IEwgMzguNjQ0NTMxIDcxLjU0Njg3NSBDIDM4LjY0NDUzMSA3MS41NDY4NzUgMzUuNzM0Mzc1IDM5LjYxMzI4MSA3NC4yODkwNjIgMzguNzY5NTMxIEwgODMuMTA1NDY5IDM4LjM5NDUzMSBMIDgzLjEwNTQ2OSAwICIvPgo8L2c+Cjwvc3ZnPgo=" alt="富邦 Fubon Logo" class="page-logo shrink-0">
+                </div>
+                
+                <p class="text-xs sm:text-sm md:text-base text-gray-700 bg-white p-3 sm:p-4 rounded-xl shadow-sm border-l-4 border-fubon mb-2 md:mb-0">
+                    由臺灣證券交易所推出的制度，用來表彰上市櫃公司綠色商業模式：<strong class="text-fubon-dark">「證明企業營運對環保有實質貢獻。」</strong>
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-3.5 md:gap-6 my-auto items-stretch">
+                    <div class="bg-gradient-to-br from-teal-50/80 via-emerald-50/50 to-white rounded-xl sm:rounded-2xl p-3.5 sm:p-5 shadow-sm border border-teal-200/80 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-1.5 text-teal-800 text-sm sm:text-base font-bold mb-1.5 pb-1 border-b border-teal-100">
+                                <span>🌍</span>
+                                <h3>國際成功案例：倫敦交易所 (LSE)</h3>
+                            </div>
+                            <ul class="text-xs md:text-sm space-y-1.5 text-gray-600 list-disc ml-4 leading-relaxed">
+                                <li>獲頒「綠色經濟標誌」企業，機構投資人投資總額<strong class="text-fubon-dark bg-teal-100/80 px-1 rounded font-bold">增加 24%</strong></li>
+                                <li>長期持續符合的企業，投資額更<strong class="text-eco-dark bg-green-100/80 px-1 rounded font-bold">增加 50%</strong></li>
+                            </ul>
+                        </div>
+                        <div class="mt-2.5 p-2 bg-white/80 rounded-lg border border-teal-100 text-teal-900 font-bold text-[11px] sm:text-xs">
+                            💡 綠色認證確實能有效吸引全球資本青睞！
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col justify-between space-y-2 sm:space-y-3">
+                        <h3 class="text-xs sm:text-base font-bold text-gray-800">獲頒的三大好處</h3>
+                        <div class="bg-white p-2.5 sm:p-3 rounded-xl shadow-sm border border-gray-100 flex items-center">
+                            <div class="bg-fubon-light text-fubon-dark w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center text-sm sm:text-base mr-2.5 shrink-0"><i class="fa-solid fa-shield-halved"></i></div>
+                            <div>
+                                <h4 class="font-bold text-xs sm:text-sm text-gray-800">可信度</h4>
+                                <p class="text-[11px] text-gray-500">獨立第三方評估，獲正式市場認可</p>
+                            </div>
+                        </div>
+                        <div class="bg-white p-2.5 sm:p-3 rounded-xl shadow-sm border border-gray-100 flex items-center">
+                            <div class="bg-fubon-light text-fubon-dark w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center text-sm sm:text-base mr-2.5 shrink-0"><i class="fa-solid fa-eye"></i></div>
+                            <div>
+                                <h4 class="font-bold text-xs sm:text-sm text-gray-800">透明度</h4>
+                                <p class="text-[11px] text-gray-500">向大眾與投資人公開綠色轉型成果</p>
+                            </div>
+                        </div>
+                        <div class="bg-white p-2.5 sm:p-3 rounded-xl shadow-sm border border-gray-100 flex items-center">
+                            <div class="bg-fubon-light text-fubon-dark w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center text-sm sm:text-base mr-2.5 shrink-0"><i class="fa-solid fa-arrow-trend-up"></i></div>
+                            <div>
+                                <h4 class="font-bold text-xs sm:text-sm text-gray-800">曝光度</h4>
+                                <p class="text-[11px] text-gray-500">提升資本市場知名度，助力資金募集</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 07: 綠色收入 -->
+        <section class="page-section" id="page7">
+            <div class="glass-card p-5 sm:p-7 md:p-10">
+                <div class="flex items-start justify-between gap-3 mb-2 md:mb-4">
+                    <div>
+                        <span class="text-fubon font-bold tracking-wider text-xs md:text-sm mb-0.5 md:mb-1 block">第二部分｜評估核心</span>
+                        <h2 class="text-xl sm:text-2xl md:text-3xl font-bold border-b-2 border-fubon inline-block pb-1">綠色收入認定與分級</h2>
+                    </div>
+                    <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMjQ4cHQiIGhlaWdodD0iMjU3cHQiIHZpZXdCb3g9IjAgMCAyNDggMjU3IiB2ZXJzaW9uPSIxLjEiPgo8ZyBpZD0ic3VyZmFjZTEiPgo8cGF0aCBzdHlsZT0iIHN0cm9rZTpub25lO2ZpbGwtcnVsZTpub256ZXJvO2ZpbGw6cmdiKDAlLDYzLjUyOTQxMiUsNjEuNTY4NjI3JSk7ZmlsbC1vcGFjaXR5OjE7IiBkPSJNIDE4Ni40Njg3NSAxMjcuMjYxNzE5IEMgMTg2LjQ2ODc1IDEyNy4yNjE3MTkgMTg2LjQ2ODc1IDEyOC4wMTE3MTkgMTg4LjYyNSAxMjkuNTExNzE5IEMgMjAyLjMyMDMxMiAxNDAuNTU4NTk0IDIwOS42MzY3MTkgMTUxLjIzODI4MSAyMDkuNTQyOTY5IDE3Mi45NjA5MzggQyAyMDkuNDQ5MjE5IDIwMC4xMTcxODggMTg1LjgxMjUgMjE5Ljc4MTI1IDE1OS4wODIwMzEgMjE5Ljc4MTI1IEwgMTU5LjA4MjAzMSAyNTcuMjQyMTg4IEMgMjA1LjY5NTMxMiAyNTcuMjQyMTg4IDI0OCAyMjQuMDg5ODQ0IDI0OCAxNzYuNzk2ODc1IEMgMjQ4IDE1OS44NDc2NTYgMjQzLjQwMjM0NCAxNDMuMTc5Njg4IDIzMS44NjMyODEgMTI2Ljk4NDM3NSBDIDIzMi40Mjk2ODggMTI2LjMyNDIxOSAyMzQuODY3MTg4IDEyMy40MjE4NzUgMjM2LjkzMzU5NCAxMTkuNzczNDM4IEMgMjM5Ljc0NjA5NCAxMTQuNzE0ODQ0IDI0MC4zMDg1OTQgMTA4LjYyNSAyNDAuMzA4NTk0IDg4LjMwODU5NCBMIDI0MC4zMDg1OTQgMCBMIDEyMC44MDg1OTQgMCBMIDEyMC44MDg1OTQgNzAuMzI0MjE5IEwgODIuNzMwNDY5IDcwLjMyNDIxOSBMIDgyLjczMDQ2OSAxMDkgTCAxNTkuNzM0Mzc1IDEwOSBMIDE1OS43MzQzNzUgMzkuNjEzMjgxIEwgMjAyLjY5NTMxMiAzOS42MTMyODEgTCAyMDIuNjk1MzEyIDk5LjQ0OTIxOSBDIDIwMi42OTUzMTIgOTkuNDQ5MjE5IDIwNC40NzY1NjIgMTE2LjIxMDkzOCAxODYuNDY4NzUgMTI3LjI2MTcxOSAiLz4KPHBhdGggc3R5bGU9IiBzdHJva2U6bm9uZTtmaWxsLXJ1bGU6bm9uemVybztmaWxsOnJnYigwJSw1OC40MzEzNzMlLDcyLjE1Njg2MyUpO2ZpbGwtb3BhY2l0eToxOyIgZD0iTSA4My4xMDE1NjIgMCBMIDcxLjk0MTQwNiAwIEMgNTEuNjc5Njg4IDAuNTYyNSAzMC40ODQzNzUgNi45Mjk2ODggMTYuMzIwMzEyIDIzLjAzOTA2MiBDIDEuNDA2MjUgMzkuODk0NTMxIDAgNTQuOTY4NzUgMCA3OS43ODUxNTYgQyAwIDk2LjY0MDYyNSAwIDI1Ny4xNDg0MzggMCAyNTcuMTQ4NDM4IEwgMTIxLjM3NSAyNTcuMTQ4NDM4IEwgMTIxLjM3NSAxODcuNTcwMzEyIEwgMTU5LjgyODEyNSAxODcuNTcwMzEyIEwgMTU5LjgyODEyNSAxNDguNDI1NzgxIEwgODIuNzMwNDY5IDE0OC40MjU3ODEgTCA4Mi43MzA0NjkgMjE4LjU2NjQwNiBMIDM4LjY0NDUzMSAyMTguNTY2NDA2IEwgMzguNjQ0NTMxIDcxLjU0Njg3NSBDIDM4LjY0NDUzMSA3MS41NDY4NzUgMzUuNzM0Mzc1IDM5LjYxMzI4MSA3NC4yODkwNjIgMzguNzY5NTMxIEwgODMuMTA1NDY5IDM4LjM5NDUzMSBMIDgzLjEwNTQ2OSAwICIvPgo8L2c+Cjwvc3ZnPgo=" alt="富邦 Fubon Logo" class="page-logo shrink-0">
+                </div>
+                
+                <div class="bg-white rounded-xl p-2.5 sm:p-3 text-center shadow-sm border border-gray-100 mb-2 md:mb-0">
+                    <p class="text-xs sm:text-sm md:text-base font-semibold"><strong>綠色收入比率</strong> = 綠色收入 ÷ 最近一年度營業收入</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-3 md:gap-6 my-auto">
+                    <div>
+                        <h3 class="text-xs sm:text-base font-bold mb-2 text-fubon-dark"><i class="fa-solid fa-magnifying-glass-dollar"></i> 認定來源 (四途徑)</h3>
+                        <ul class="space-y-1.5 text-[11px] sm:text-xs md:text-sm">
+                            <li class="bg-gray-50 p-2 rounded-lg border-l-4 border-fubon">
+                                <strong>1. 適用永續指引：</strong>符合一般或支持型活動
+                            </li>
+                            <li class="bg-gray-50 p-2 rounded-lg border-l-4 border-fubon">
+                                <strong>2. 符合歐盟分類：</strong>未納入台灣但符歐盟標準
+                            </li>
+                            <li class="bg-gray-50 p-2 rounded-lg border-l-4 border-fubon">
+                                <strong>3. 綠色標章認證：</strong>產品服務通過第三方認證
+                            </li>
+                            <li class="bg-gray-50 p-2 rounded-lg border-l-4 border-fubon">
+                                <strong>4. 綠色工廠評估：</strong>廠區取得清潔生產認證
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h3 class="text-xs sm:text-base font-bold mb-2 text-eco-dark"><i class="fa-solid fa-layer-group"></i> 綠色收入分級</h3>
+                        <div class="mb-2 bg-green-50 p-2.5 sm:p-3 rounded-xl border border-green-200">
+                            <h4 class="font-bold text-green-800 text-xs sm:text-sm mb-0.5">淺綠色收入 <span class="text-[10px] font-normal text-green-600">(基礎永續)</span></h4>
+                            <ul class="text-[11px] sm:text-xs text-gray-700 space-y-0.5">
+                                <li>✓ 符合「一般經濟活動」/ 綠色標章工廠</li>
+                            </ul>
+                        </div>
+                        <div class="bg-green-100 p-2.5 sm:p-3 rounded-xl border border-green-300">
+                            <h4 class="font-bold text-green-900 text-xs sm:text-sm mb-0.5">深綠色收入 <span class="text-[10px] font-normal text-green-700">(高度永續)</span></h4>
+                            <ul class="text-[11px] sm:text-xs text-gray-700 space-y-0.5">
+                                <li>✓ 符合「支持型經濟活動」(如再生能源)</li>
+                                <li>✓ 淺綠收入 + 通過 SBTi/CDP A級評級</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 08: 認證等級 -->
+        <section class="page-section" id="page8">
+            <div class="glass-card p-5 sm:p-7 md:p-10">
+                <div class="flex items-start justify-between gap-3 mb-2 md:mb-4">
+                    <div>
+                        <span class="text-fubon font-bold tracking-wider text-xs md:text-sm mb-0.5 md:mb-1 block">第二部分｜評分標準</span>
+                        <h2 class="text-xl sm:text-2xl md:text-3xl font-bold border-b-2 border-fubon inline-block pb-1">綠色證券認證等級</h2>
+                    </div>
+                    <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMjQ4cHQiIGhlaWdodD0iMjU3cHQiIHZpZXdCb3g9IjAgMCAyNDggMjU3IiB2ZXJzaW9uPSIxLjEiPgo8ZyBpZD0ic3VyZmFjZTEiPgo8cGF0aCBzdHlsZT0iIHN0cm9rZTpub25lO2ZpbGwtcnVsZTpub256ZXJvO2ZpbGw6cmdiKDAlLDYzLjUyOTQxMiUsNjEuNTY4NjI3JSk7ZmlsbC1vcGFjaXR5OjE7IiBkPSJN IDE4Ni40Njg3NSAxMjcuMjYxNzE5IEMgMTg2LjQ2ODc1IDEyNy4yNjE3MTkgMTg2LjQ2ODc1IDEyOC4wMTE3MTkgMTg4LjYyNSAxMjkuNTExNzE5IEMgMjAyLjMyMDMxMiAxNDAuNTU4NTk0IDIwOS42MzY3MTkgMTUxLjIzODI4MSAyMDkuNTQyOTY5IDE3Mi45NjA5MzggQyAyMDkuNDQ5MjE5IDIwMC4xMTcxODggMTg1LjgxMjUgMjE5Ljc4MTI1IDE1OS4wODIwMzEgMjE5Ljc4MTI1IEwgMTU5LjA4MjAzMSAyNTcuMjQyMTg4IEMgMjA1LjY5NTMxMiAyNTcuMjQyMTg4IDI0OCAyMjQuMDg5ODQ0IDI0OCAxNzYuNzk2ODc1IEMgMjQ4IDE1OS44NDc2NTYgMjQzLjQwMjM0NCAxNDMuMTc5Njg4IDIzMS44NjMyODEgMTI2Ljk4NDM3NSBDIDIzMi40Mjk2ODggMTI2LjMyNDIxOSAyMzQuODY3MTg4IDEyMy40MjE4NzUgMjM2LjkzMzU5NCAxMTkuNzczNDM4IEMgMjM5Ljc0NjA5NCAxMTQuNzE0ODQ0IDI0MC4zMDg1OTQgMTA4LjYyNSAyNDAuMzA4NTk0IDg4LjMwODU5NCBMIDI0MC4zMDg1OTQgMCBMIDEyMC44MDg1OTQgMCBMIDEyMC44MDg1OTQgNzAuMzI0MjE5IEwgODIuNzMwNDY5IDcwLjMyNDIxOSBMIDgyLjczMDQ2OSAxMDkgTCAxNTkuNzM0Mzc1IDEwOSBMIDE1OS43MzQzNzUgMzkuNjEzMjgxIEwgMjAyLjY5NTMxMiAzOS42MTMyODEgTCAyMDIuNjk1MzEyIDk5LjQ0OTIxOSBDIDIwMi42OTUzMTIgOTkuNDQ5MjE5IDIwNC40NzY1NjIgMTE2LjIxMDkzOCAxODYuNDY4NzUgMTI3LjI2MTcxOSAiLz4KPHBhdGggc3R5bGU9IiBzdHJva2U6bm9uZTtmaWxsLXJ1bGU6bm9uemVybztmaWxsOnJnYigwJSw1OC40MzEzNzMlLDcyLjE1Njg2MyUpO2ZpbGwtb3BhY2l0eToxOyIgZD0iTSA4My4xMDE1NjIgMCBMIDcxLjk0MTQwNiAwIEMgNTEuNjc5Njg4IDAuNTYyNSAzMC40ODQzNzUgNi45Mjk2ODggMTYuMzIwMzEyIDIzLjAzOTA2MiBDIDEuNDA2MjUgMzkuODk0NTMxIDAgNTQuOTY4NzUgMCA3OS43ODUxNTYgQyAwIDk2LjY0MDYyNSAwIDI1Ny4xNDg0MzggMCAyNTcuMTQ4NDM4IEwgMTIxLjM3NSAyNTcuMTQ4NDM4IEwgMTIxLjM3NSAxODcuNTcwMzEyIEwgMTU5LjgyODEyNSAxODcuNTcwMzEyIEwgMTU5LjgyODEyNSAxNDguNDI1NzgxIEwgODIuNzMwNDY5IDE0OC40MjU3ODEgTCA4Mi43MzA0NjkgMjE4LjU2NjQwNiBMIDM4LjY0NDUzMSAyMTguNTY2NDA2IEwgMzguNjQ0NTMxIDcxLjU0Njg3NSBDIDM4LjY0NDUzMSA3MS41NDY4NzUgMzUuNzM0Mzc1IDM5LjYxMzI4MSA3NC4yODkwNjIgMzguNzY5NTMxIEwgODMuMTA1NDY5IDM4LjM5NDUzMSBMIDgzLjEwNTQ2OSAwICIvPgo8L2c+Cjwvc3ZnPgo=" alt="富邦 Fubon Logo" class="page-logo shrink-0">
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-3.5 md:gap-6 my-auto">
+                    <!-- Level 1: 金牌 -->
+                    <div class="bg-gradient-to-br from-amber-50/50 via-green-50/40 to-white rounded-xl sm:rounded-2xl p-3.5 sm:p-5 border-2 border-amber-400 shadow-sm">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-xl sm:text-2xl font-black text-amber-700">Level 1</h3>
+                            <div class="text-amber-500 text-2xl filter drop-shadow">
+                                <i class="fa-solid fa-medal"></i>
+                            </div>
+                        </div>
+                        <h4 class="font-bold text-gray-800 mb-2 flex items-center gap-1.5">
+                            <span class="text-sm sm:text-base font-bold">一級綠色證券標章</span>
+                            <span class="text-[10px] bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded-full border border-amber-300">金牌</span>
+                        </h4>
+                        <ul class="text-xs space-y-1 text-gray-600 mb-2.5">
+                            <li><i class="fa-solid fa-check text-green-500 mr-1.5"></i><strong>深綠色收入 > 50%</strong></li>
+                            <li><i class="fa-solid fa-check text-green-500 mr-1.5"></i>化石燃料營收 ≤ 5%</li>
+                            <li><i class="fa-solid fa-check text-green-500 mr-1.5"></i>無重大負面環境裁處</li>
+                        </ul>
+                        <div class="bg-amber-100/70 text-amber-900 text-[11px] p-2 rounded text-center font-bold">
+                            代表高度承諾永續，堪稱業界典範
+                        </div>
+                    </div>
+
+                    <!-- Level 2: 銀牌 -->
+                    <div class="bg-gradient-to-br from-slate-50 via-gray-50 to-white rounded-xl sm:rounded-2xl p-3.5 sm:p-5 border-2 border-slate-400 shadow-sm">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-xl sm:text-2xl font-black text-slate-700">Level 2</h3>
+                            <div class="text-slate-400 text-2xl filter drop-shadow">
+                                <i class="fa-solid fa-medal"></i>
+                            </div>
+                        </div>
+                        <h4 class="font-bold text-gray-800 mb-2 flex items-center gap-1.5">
+                            <span class="text-sm sm:text-base font-bold">二級綠色證券標章</span>
+                            <span class="text-[10px] bg-slate-200 text-slate-700 font-bold px-2 py-0.5 rounded-full border border-slate-300">銀牌</span>
+                        </h4>
+                        <ul class="text-xs space-y-1 text-gray-600 mb-2.5">
+                            <li><i class="fa-solid fa-check text-slate-500 mr-1.5"></i><strong>深綠色 + 淺綠色 > 50%</strong></li>
+                            <li><i class="fa-solid fa-check text-slate-500 mr-1.5"></i>化石燃料營收 ≤ 50%</li>
+                            <li><i class="fa-solid fa-check text-slate-500 mr-1.5"></i>無重大負面環境裁處</li>
+                        </ul>
+                        <div class="bg-slate-100 text-slate-700 text-[11px] p-2 rounded text-center font-bold">
+                            代表積極朝向轉型，轉型進展明顯
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-3 rounded-xl shadow-sm flex flex-col sm:flex-row items-center justify-between border border-gray-100 mt-2">
+                    <div class="text-center sm:text-left">
+                        <h4 class="font-bold text-fubon-dark text-xs sm:text-sm"><i class="fa-solid fa-clock-rotate-left"></i> 認證有效期與複核</h4>
+                        <p class="text-[11px] text-gray-600">有效期 1 年，每年複核一次。評審無費用（全依公開資料）。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 09: 企業如何申請與揭露 -->
+        <section class="page-section" id="page9">
+            <div class="glass-card p-5 sm:p-7 md:p-10">
+                <div class="flex items-start justify-between gap-3 mb-2 md:mb-4">
+                    <div>
+                        <span class="text-fubon font-bold tracking-wider text-xs md:text-sm mb-0.5 md:mb-1 block">第二部分｜實務操作</span>
+                        <h2 class="text-xl sm:text-2xl md:text-3xl font-bold border-b-2 border-fubon inline-block pb-1">企業如何申請與揭露</h2>
+                    </div>
+                    <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMjQ4cHQiIGhlaWdodD0iMjU3cHQiIHZpZXdCb3g9IjAgMCAyNDggMjU3IiB2ZXJzaW9uPSIxLjEiPgo8ZyBpZD0ic3VyZmFjZTEiPgo8cGF0aCBzdHlsZT0iIHN0cm9rZTpub25lO2ZpbGwtcnVsZTpub256ZXJvO2ZpbGw6cmdiKDAlLDYzLjUyOTQxMiUsNjEuNTY4NjI3JSk7ZmlsbC1vcGFjaXR5OjE7IiBkPSJN IDE4Ni40Njg3NSAxMjcuMjYxNzE5IEMgMTg2LjQ2ODc1IDEyNy4yNjE3MTkgMTg2LjQ2ODc1IDEyOC4wMTE3MTkgMTg4LjYyNSAxMjkuNTExNzE5IEMgMjAyLjMyMDMxMiAxNDAuNTU4NTk0IDIwOS42MzY3MTkgMTUxLjIzODI4MSAyMDkuNTQyOTY5IDE3Mi45NjA5MzggQyAyMDkuNDQ5MjE5IDIwMC4xMTcxODggMTg1LjgxMjUgMjE5Ljc4MTI1IDE1OS4wODIwMzEgMjE5Ljc4MTI1IEwgMTU5LjA4MjAzMSAyNTcuMjQyMTg4IEMgMjA1LjY5NTMxMiAyNTcuMjQyMTg4IDI0OCAyMjQuMDg5ODQ0IDI0OCAxNzYuNzk2ODc1IEMgMjQ4IDE1OS44NDc2NTYgMjQzLjQwMjM0NCAxNDMuMTc5Njg4IDIzMS44NjMyODEgMTI2Ljk4NDM3NSBDIDIzMi40Mjk2ODggMTI2LjMyNDIxOSAyMzQuODY3MTg4IDEyMy40MjE4NzUgMjM2LjkzMzU5NCAxMTkuNzczNDM4IEMgMjM5Ljc0NjA5NCAxMTQuNzE0ODQ0IDI0MC4zMDg1OTQgMTA4LjYyNSAyNDAuMzA4NTk0IDg4LjMwODU5NCBMIDI0MC4zMDg1OTQgMCBMIDEyMC44MDg1OTQgMCBMIDEyMC44MDg1OTQgNzAuMzI0MjE5IEwgODIuNzMwNDY5IDcwLjMyNDIxOSBMIDgyLjczMDQ2OSAxMDkgTCAxNTkuNzM0Mzc1IDEwOSBMIDE1OS43MzQzNzUgMzkuNjEzMjgxIEwgMjAyLjY5NTMxMiAzOS42MTMyODEgTCAyMDIuNjk1MzEyIDk5LjQ0OTIxOSBDIDIwMi42OTUzMTIgOTkuNDQ5MjE5IDIwNC40NzY1NjIgMTE2LjIxMDkzOCAxODYuNDY4NzUgMTI3LjI2MTcxOSAiLz4KPHBhdGggc3R5bGU9IiBzdHJva2U6bm9uZTtmaWxsLXJ1bGU6bm9uemVybztmaWxsOnJnYigwJSw1OC40MzEzNzMlLDcyLjE1Njg2MyUpO2ZpbGwtb3BhY2l0eToxOyIgZD0iTSA4My4xMDE1NjIgMCBMIDcxLjk0MTQwNiAwIEMgNTEuNjc5Njg4IDAuNTYyNSAzMC40ODQzNzUgNi45Mjk2ODggMTYuMzIwMzEyIDIzLjAzOTA2MiBDIDEuNDA2MjUgMzkuODk0NTMxIDAgNTQuOTY4NzUgMCA3OS43ODUxNTYgQyAwIDk2LjY0MDYyNSAwIDI1Ny4xNDg0MzggMCAyNTcuMTQ4NDM4IEwgMTIxLjM3NSAyNTcuMTQ4NDM4IEwgMTIxLjM3NSAxODcuNTcwMzEyIEwgMTU5LjgyODEyNSAxODcuNTcwMzEyIEwgMTU5LjgyODEyNSAxNDguNDI1NzgxIEwgODIuNzMwNDY5IDE0OC40MjU3ODEgTCA4Mi43MzA0NjkgMjE4LjU2NjQwNiBMIDM4LjY0NDUzMSAyMTguNTY2NDA2IEwgMzguNjQ0NTMxIDcxLjU0Njg3NSBDIDM4LjY0NDUzMSA3MS41NDY4NzUgMzUuNzM0Mzc1IDM5LjYxMzI4MSA3NC4yODkwNjIgMzguNzY5NTMxIEwgODMuMTA1NDY5IDM4LjM5NDUzMSBMIDgzLjEwNTQ2OSAwICIvPgo8L2c+Cjwvc3ZnPgo=" alt="富邦 Fubon Logo" class="page-logo shrink-0">
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-8 my-auto">
+                    <div class="space-y-2.5">
+                        <h3 class="text-xs sm:text-base font-bold text-gray-800 flex items-center gap-1.5">
+                            <span class="w-2 h-4 bg-fubon rounded-full"></span> 申請方式（雙軌制）
+                        </h3>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div class="bg-white p-2.5 rounded-xl shadow-sm border-l-4 border-fubon">
+                                <h4 class="font-bold text-fubon-dark text-xs">被動評估</h4>
+                                <p class="text-[10px] text-gray-500">主動抓取公開資訊納入評估</p>
+                            </div>
+                            <div class="bg-white p-2.5 rounded-xl shadow-sm border-l-4 border-fubon">
+                                <h4 class="font-bold text-fubon-dark text-xs">主動申請</h4>
+                                <p class="text-[10px] text-gray-500">企業自填，每年8月底前提交</p>
+                            </div>
+                        </div>
+
+                        <h3 class="text-xs sm:text-base font-bold text-gray-800 flex items-center gap-1.5 pt-1">
+                            <span class="w-2 h-4 bg-fubon rounded-full"></span> 需備公開資訊
+                        </h3>
+                        <div class="grid grid-cols-2 gap-1.5 text-[11px] font-medium text-gray-700">
+                            <div class="bg-white p-2 rounded-lg shadow-sm truncate">📄 年度財務報表</div>
+                            <div class="bg-white p-2 rounded-lg shadow-sm truncate">📗 永續報告書</div>
+                            <div class="bg-white p-2 rounded-lg shadow-sm truncate">📊 公開平台資料</div>
+                            <div class="bg-white p-2 rounded-lg shadow-sm truncate">🌐 國際倡議參與</div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2.5">
+                        <h3 class="text-xs sm:text-base font-bold text-gray-800 flex items-center gap-1.5">
+                            <span class="w-2 h-4 bg-eco rounded-full"></span> 認證時間表
+                        </h3>
+                        <div class="bg-white p-3 rounded-xl shadow-sm space-y-1.5 text-xs">
+                            <div class="flex items-center gap-2">
+                                <span class="px-2 py-0.5 bg-gray-200 text-gray-700 font-bold rounded text-[10px]">8 月</span>
+                                <span class="text-gray-800 text-[11px]">主動申報受理截止</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="px-2 py-0.5 bg-fubon text-white font-bold rounded text-[10px]">8-10月</span>
+                                <span class="text-fubon-dark text-[11px]">評估審查與數據評分</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="px-2 py-0.5 bg-eco text-white font-bold rounded text-[10px]">11-12月</span>
+                                <span class="text-eco-dark text-[11px]">委員會審議並統一發布</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-xl p-2.5 border border-teal-200">
+                            <div class="text-[11px] text-teal-950 font-bold mb-0.5">💡 宣傳建議</div>
+                            <p class="text-[10px] text-teal-900 leading-relaxed">
+                                建議於年報與官網積極揭露，吸引 ESG 永續基金與機構投資人目光！
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 10: 範疇3簡介 -->
+        <section class="page-section" id="page10">
+            <div class="glass-card p-5 sm:p-7 md:p-10">
+                <div class="flex items-start justify-between gap-3 mb-2 md:mb-4">
+                    <div>
+                        <span class="text-fubon font-bold tracking-wider text-xs md:text-sm mb-0.5 md:mb-1 block">第三部分｜溫室氣體</span>
+                        <h2 class="text-xl sm:text-2xl md:text-3xl font-bold border-b-2 border-fubon inline-block pb-1">什麼是溫室氣體範疇3？</h2>
+                    </div>
+                    <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMjQ4cHQiIGhlaWdodD0iMjU3cHQiIHZpZXdCb3g9IjAgMCAyNDggMjU3IiB2ZXJzaW9uPSIxLjEiPgo8ZyBpZD0ic3VyZmFjZTEiPgo8cGF0aCBzdHlsZT0iIHN0cm9rZTpub25lO2ZpbGwtcnVsZTpub256ZXJvO2ZpbGw6cmdiKDAlLDYzLjUyOTQxMiUsNjEuNTY4NjI3JSk7ZmlsbC1vcGFjaXR5OjE7IiBkPSJN IDE4Ni40Njg3NSAxMjcuMjYxNzE5IEMgMTg2LjQ2ODc1IDEyNy4yNjE3MTkgMTg2LjQ2ODc1IDEyOC4wMTE3MTkgMTg4LjYyNSAxMjkuNTExNzE5IEMgMjAyLjMyMDMxMiAxNDAuNTU4NTk0IDIwOS42MzY3MTkgMTUxLjIzODI4MSAyMDkuNTQyOTY5IDE3Mi45NjA5MzggQyAyMDkuNDQ5MjE5IDIwMC4xMTcxODggMTg1LjgxMjUgMjE5Ljc4MTI1IDE1OS4wODIwMzEgMjE5Ljc4MTI1IEwgMTU5LjA4MjAzMSAyNTcuMjQyMTg4IEMgMjA1LjY5NTMxMiAyNTcuMjQyMTg4IDI0OCAyMjQuMDg5ODQ0IDI0OCAxNzYuNzk2ODc1IEMgMjQ4IDE1OS44NDc2NTYgMjQzLjQwMjM0NCAxNDMuMTc5Njg4IDIzMS44NjMyODEgMTI2Ljk4NDM3NSBDIDIzMi40Mjk2ODggMTI2LjMyNDIxOSAyMzQuODY3MTg4IDEyMy40MjE4NzUgMjM2LjkzMzU5NCAxMTkuNzczNDM4IEMgMjM5Ljc0NjA5NCAxMTQuNzE0ODQ0IDI0MC4zMDg1OTQgMTA4LjYyNSAyNDAuMzA4NTk0IDg4LjMwODU5NCBMIDI0MC4zMDg1OTQgMCBMIDEyMC44MDg1OTQgMCBMIDEyMC44MDg1OTQgNzAuMzI0MjE5IEwgODIuNzMwNDY5IDcwLjMyNDIxOSBMIDgyLjczMDQ2OSAxMDkgTCAxNTkuNzM0Mzc1IDEwOSBMIDE1OS43MzQzNzUgMzkuNjEzMjgxIEwgMjAyLjY5NTMxMiAzOS42MTMyODEgTCAyMDIuNjk1MzEyIDk5LjQ0OTIxOSBDIDIwMi42OTUzMTIgOTkuNDQ5MjE5IDIwNC40NzY1NjIgMTE2LjIxMDkzOCAxODYuNDY4NzUgMTI3LjI2MTcxOSAiLz4KPHBhdGggc3R5bGU9IiBzdHJva2U6bm9uZTtmaWxsLXJ1bGU6bm9uemVybztmaWxsOnJnYigwJSw1OC40MzEzNzMlLDcyLjE1Njg2MyUpO2ZpbGwtb3BhY2l0eToxOyIgZD0iTSA4My4xMDE1NjIgMCBMIDcxLjk0MTQwNiAwIEMgNTEuNjc5Njg4IDAuNTYyNSAzMC40ODQzNzUgNi45Mjk2ODggMTYuMzIwMzEyIDIzLjAzOTA2MiBDIDEuNDA2MjUgMzkuODk0NTMxIDAgNTQuOTY4NzUgMCA3OS43ODUxNTYgQyAwIDk2LjY0MDYyNSAwIDI1Ny4xNDg0MzggMCAyNTcuMTQ4NDM4IEwgMTIxLjM3NSAyNTcuMTQ4NDM4IEwgMTIxLjM3NSAxODcuNTcwMzEyIEwgMTU5LjgyODEyNSAxODcuNTcwMzEyIEwgMTU5LjgyODEyNSAxNDguNDI1NzgxIEwgODIuNzMwNDY5IDE0OC40MjU3ODEgTCA4Mi43MzA0NjkgMjE4LjU2NjQwNiBMIDM4LjY0NDUzMSAyMTguNTY2NDA2IEwgMzguNjQ0NTMxIDcxLjU0Njg3NSBDIDM4LjY0NDUzMSA3MS41NDY4NzUgMzUuNzM0Mzc1IDM5LjYxMzI4MSA3NC4yODkwNjIgMzguNzY5NTMxIEwgODMuMTA1NDY5IDM4LjM5NDUzMSBMIDgzLjEwNTQ2OSAwICIvPgo8L2c+Cjwvc3ZnPgo=" alt="富邦 Fubon Logo" class="page-logo shrink-0">
+                </div>
+                
+                <p class="text-xs sm:text-sm text-gray-700 bg-white p-2.5 sm:p-3.5 rounded-xl shadow-sm border-l-4 border-fubon">
+                    範疇3 是企業<strong class="text-fubon-dark bg-fubon-light px-1.5 py-0.5 rounded">整個價值鏈</strong>產生的間接溫室氣體排放。
+                </p>
+
+                <div class="flex flex-row items-stretch justify-center gap-2 my-auto">
+                    <div class="bg-white p-2.5 sm:p-4 rounded-xl shadow-sm border border-gray-100 flex-1 text-center">
+                        <div class="text-gray-400 text-[10px] sm:text-xs font-bold">範疇1</div>
+                        <i class="fa-solid fa-smog text-xl sm:text-2xl text-gray-600 my-1"></i>
+                        <h4 class="font-bold text-gray-800 text-xs sm:text-sm">直接排放</h4>
+                        <p class="text-[10px] text-gray-500 hidden sm:block">鍋爐/車輛燃料/冷媒</p>
+                    </div>
+                    <div class="bg-white p-2.5 sm:p-4 rounded-xl shadow-sm border border-gray-100 flex-1 text-center">
+                        <div class="text-gray-400 text-[10px] sm:text-xs font-bold">範疇2</div>
+                        <i class="fa-solid fa-bolt text-xl sm:text-2xl text-yellow-500 my-1"></i>
+                        <h4 class="font-bold text-gray-800 text-xs sm:text-sm">能源間接</h4>
+                        <p class="text-[10px] text-gray-500 hidden sm:block">外購電力/蒸汽</p>
+                    </div>
+                    <div class="bg-fubon-dark text-white p-2.5 sm:p-4 rounded-xl shadow-md border border-fubon flex-1 text-center">
+                        <div class="text-fubon-light text-[10px] sm:text-xs font-bold">範疇3</div>
+                        <i class="fa-solid fa-link text-xl sm:text-2xl text-white my-1"></i>
+                        <h4 class="font-bold text-white text-xs sm:text-sm">價值鏈間接</h4>
+                        <p class="text-[10px] text-fubon-light hidden sm:block">上下游合作夥伴</p>
+                    </div>
+                </div>
+
+                <div class="bg-red-50 text-red-800 p-3 rounded-xl border border-red-100 mt-1">
+                    <h4 class="font-bold text-xs flex items-center mb-0.5">
+                        <i class="fa-solid fa-circle-exclamation mr-1.5"></i> 為什麼要揭露範疇3？
+                    </h4>
+                    <p class="text-[11px] sm:text-xs leading-relaxed text-red-900">
+                        在多數企業中，範疇3 占總排放<strong class="text-red-600 bg-red-100 px-1 rounded">高達 70-90%</strong>！完整盤查才能找到真正減碳核心。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 11: 15類排放 -->
+        <section class="page-section" id="page11">
+            <div class="glass-card p-5 sm:p-7 md:p-10">
+                <div class="flex items-start justify-between gap-3 mb-2 md:mb-4">
+                    <div>
+                        <span class="text-fubon font-bold tracking-wider text-xs md:text-sm mb-0.5 md:mb-1 block">第三部分｜範圍解析</span>
+                        <h2 class="text-xl sm:text-2xl md:text-3xl font-bold border-b-2 border-fubon inline-block pb-1">15類排放項目全覽</h2>
+                    </div>
+                    <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMjQ4cHQiIGhlaWdodD0iMjU3cHQiIHZpZXdCb3g9IjAgMCAyNDggMjU3IiB2ZXJzaW9uPSIxLjEiPgo8ZyBpZD0ic3VyZmFjZTEiPgo8cGF0aCBzdHlsZT0iIHN0cm9rZTpub25lO2ZpbGwtcnVsZTpub256ZXJvO2ZpbGw6cmdiKDAlLDYzLjUyOTQxMiUsNjEuNTY4NjI3JSk7ZmlsbC1vcGFjaXR5OjE7IiBkPSJN IDE4Ni40Njg3NSAxMjcuMjYxNzE5IEMgMTg2LjQ2ODc1IDEyNy4yNjE3MTkgMTg2LjQ2ODc1IDEyOC4wMTE3MTkgMTg4LjYyNSAxMjkuNTExNzE5IEMgMjAyLjMyMDMxMiAxNDAuNTU4NTk0IDIwOS42MzY3MTkgMTUxLjIzODI4MSAyMDkuNTQyOTY5IDE3Mi45NjA5MzggQyAyMDkuNDQ5MjE5IDIwMC4xMTcxODggMTg1LjgxMjUgMjE5Ljc4MTI1IDE1OS4wODIwMzEgMjE5Ljc4MTI1IEwgMTU5LjA4MjAzMSAyNTcuMjQyMTg4IEMgMjA1LjY5NTMxMiAyNTcuMjQyMTg4IDI0OCAyMjQuMDg5ODQ0IDI0OCAxNzYuNzk2ODc1IEMgMjQ4IDE1OS44NDc2NTYgMjQzLjQwMjM0NCAxNDMuMTc5Njg4IDIzMS44NjMyODEgMTI2Ljk4NDM3NSBDIDIzMi40Mjk2ODggMTI2LjMyNDIxOSAyMzQuODY3MTg4IDEyMy40MjE4NzUgMjM2LjkzMzU5NCAxMTkuNzczNDM4IEMgMjM5Ljc0NjA5NCAxMTQuNzE0ODQ0IDI0MC4zMDg1OTQgMTA4LjYyNSAyNDAuMzA4NTk0IDg4LjMwODU5NCBMIDI0MC4zMDg1OTQgMCBMIDEyMC44MDg1OTQgMCBMIDEyMC44MDg1OTQgNzAuMzI0MjE5IEwgODIuNzMwNDY5IDcwLjMyNDIxOSBMIDgyLjczMDQ2OSAxMDkgTCAxNTkuNzM0Mzc1IDEwOSBMIDE1OS43MzQzNzUgMzkuNjEzMjgxIEwgMjAyLjY5NTMxMiAzOS42MTMyODEgTCAyMDIuNjk1MzEyIDk5LjQ0OTIxOSBDIDIwMi42OTUzMTIgOTkuNDQ5MjE5IDIwNC40NzY1NjIgMTE2LjIxMDkzOCAxODYuNDY4NzUgMTI3LjI2MTcxOSAiLz4KPHBhdGggc3R5bGU9IiBzdHJva2U6bm9uZTtmaWxsLXJ1bGU6bm9uemVybztmaWxsOnJnYigwJSw1OC40MzEzNzMlLDcyLjE1Njg2MyUpO2ZpbGwtb3BhY2l0eToxOyIgZD0iTSA4My4xMDE1NjIgMCBMIDcxLjk0MTQwNiAwIEMgNTEuNjc5Njg4IDAuNTYyNSAzMC40ODQzNzUgNi45Mjk2ODggMTYuMzIwMzEyIDIzLjAzOTA2MiBDIDEuNDA2MjUgMzkuODk0NTMxIDAgNTQuOTY4NzUgMCA3OS43ODUxNTYgQyAwIDk2LjY0MDYyNSAwIDI1Ny4xNDg0MzggMCAyNTcuMTQ4NDM4IEwgMTIxLjM3NSAyNTcuMTQ4NDM4IEwgMTIxLjM3NSAxODcuNTcwMzEyIEwgMTU5LjgyODEyNSAxODcuNTcwMzEyIEwgMTU5LjgyODEyNSAxNDguNDI1NzgxIEwgODIuNzMwNDY5IDE0OC40MjU3ODEgTCA4Mi43MzA0NjkgMjE4LjU2NjQwNiBMIDM4LjY0NDUzMSAyMTguNTY2NDA2IEwgMzguNjQ0NTMxIDcxLjU0Njg3NSBDIDM4LjY0NDUzMSA3MS41NDY4NzUgMzUuNzM0Mzc1IDM5LjYxMzI4MSA3NC4yODkwNjIgMzguNzY5NTMxIEwgODMuMTA1NDY5IDM4LjM5NDUzMSBMIDgzLjEwNTQ2OSAwICIvPgo8L2c+Cjwvc3ZnPgo=" alt="富邦 Fubon Logo" class="page-logo shrink-0">
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-3 md:gap-6 my-auto">
+                    <div class="bg-white rounded-xl p-3 sm:p-4 shadow-sm border-t-4 border-fubon">
+                        <h3 class="text-xs sm:text-base font-bold text-fubon-dark mb-2"><i class="fa-solid fa-arrow-up-from-bracket"></i> 上游排放 <span class="text-[10px] font-normal text-gray-500">(供應商端)</span></h3>
+                        <ul class="text-[11px] sm:text-xs space-y-1 text-gray-700">
+                            <li><span class="bg-gray-100 px-1.5 py-0.5 rounded font-bold mr-1">類別1</span> 購買商品及勞務</li>
+                            <li><span class="bg-gray-100 px-1.5 py-0.5 rounded font-bold mr-1">類別2</span> 資本財 (設備/廠房)</li>
+                            <li><span class="bg-gray-100 px-1.5 py-0.5 rounded font-bold mr-1">類別3</span> 燃料能源相關活動</li>
+                            <li><span class="bg-gray-100 px-1.5 py-0.5 rounded font-bold mr-1">類別4</span> 上游運輸及配送</li>
+                            <li><span class="bg-gray-100 px-1.5 py-0.5 rounded font-bold mr-1">類別5</span> 營運產生之廢棄物</li>
+                            <li><span class="bg-gray-100 px-1.5 py-0.5 rounded font-bold mr-1">類別6</span> 商務差旅</li>
+                            <li><span class="bg-gray-100 px-1.5 py-0.5 rounded font-bold mr-1">類別7</span> 員工通勤</li>
+                            <li><span class="bg-gray-100 px-1.5 py-0.5 rounded font-bold mr-1">類別8</span> 上游租賃資產</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-3 sm:p-4 shadow-sm border-t-4 border-eco">
+                        <h3 class="text-xs sm:text-base font-bold text-eco-dark mb-2"><i class="fa-solid fa-arrow-down-long"></i> 下游排放 <span class="text-[10px] font-normal text-gray-500">(客戶/銷售端)</span></h3>
+                        <ul class="text-[11px] sm:text-xs space-y-1 text-gray-700">
+                            <li><span class="bg-gray-100 px-1.5 py-0.5 rounded font-bold mr-1">類別9</span> 下游運輸及配送</li>
+                            <li><span class="bg-gray-100 px-1.5 py-0.5 rounded font-bold mr-1">類別10</span> 已銷售產品加工</li>
+                            <li><span class="bg-gray-100 px-1.5 py-0.5 rounded font-bold mr-1">類別11</span> 已銷售產品使用</li>
+                            <li><span class="bg-gray-100 px-1.5 py-0.5 rounded font-bold mr-1">類別12</span> 產品廢棄處理</li>
+                            <li><span class="bg-gray-100 px-1.5 py-0.5 rounded font-bold mr-1">類別13</span> 下游租賃資產</li>
+                            <li><span class="bg-gray-100 px-1.5 py-0.5 rounded font-bold mr-1">類別14</span> 加盟經營</li>
+                            <li><span class="bg-gray-100 px-1.5 py-0.5 rounded font-bold mr-1">類別15</span> 投資活動</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="text-center text-gray-600 bg-white/70 py-1.5 rounded-full font-bold text-[11px] sm:text-xs mt-1">
+                    💡 企業不必全部揭露！依重大性選定最關鍵類別即可。
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 12: 計算方法 -->
+        <section class="page-section" id="page12">
+            <div class="glass-card p-5 sm:p-7 md:p-10">
+                <div class="flex items-start justify-between gap-3 mb-2 md:mb-4">
+                    <div>
+                        <span class="text-fubon font-bold tracking-wider text-xs md:text-sm mb-0.5 md:mb-1 block">第三部分｜實務計算</span>
+                        <h2 class="text-xl sm:text-2xl md:text-3xl font-bold border-b-2 border-fubon inline-block pb-1">計算方法速查</h2>
+                    </div>
+                    <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMjQ4cHQiIGhlaWdodD0iMjU3cHQiIHZpZXdCb3g9IjAgMCAyNDggMjU3IiB2ZXJzaW9uPSIxLjEiPgo8ZyBpZD0ic3VyZmFjZTEiPgo8cGF0aCBzdHlsZT0iIHN0cm9rZTpub25lO2ZpbGwtcnVsZTpub256ZXJvO2ZpbGw6cmdiKDAlLDYzLjUyOTQxMiUsNjEuNTY4NjI3JSk7ZmlsbC1vcGFjaXR5OjE7IiBkPSJNIDE4Ni40Njg3NSAxMjcuMjYxNzE5IEMgMTg2LjQ2ODc1IDEyNy4yNjE3MTkgMTg2LjQ2ODc1IDEyOC4wMTE3MTkgMTg4LjYyNSAxMjkuNTExNzE5IEMgMjAyLjMyMDMxMiAxNDAuNTU4NTk0IDIwOS42MzY3MTkgMTUxLjIzODI4MSAyMDkuNTQyOTY5IDE3Mi45NjA5MzggQyAyMDkuNDQ5MjE5IDIwMC4xMTcxODggMTg1LjgxMjUgMjE5Ljc4MTI1IDE1OS4wODIwMzEgMjE5Ljc4MTI1IEwgMTU5LjA4MjAzMSAyNTcuMjQyMTg4IEMgMjA1LjY5NTMxMiAyNTcuMjQyMTg4IDI0OCAyMjQuMDg5ODQ0IDI0OCAxNzYuNzk2ODc1IEMgMjQ4IDE1OS44NDc2NTYgMjQzLjQwMjM0NCAxNDMuMTc5Njg4IDIzMS44NjMyODEgMTI2Ljk4NDM3NSBDIDIzMi40Mjk2ODggMTI2LjMyNDIxOSAyMzQuODY3MTg4IDEyMy40MjE4NzUgMjM2LjkzMzU5NCAxMTkuNzczNDM4IEMgMjM5Ljc0NjA5NCAxMTQuNzE0ODQ0IDI0MC4zMDg1OTQgMTA4LjYyNSAyNDAuMzA4NTk0IDg4LjMwODU5NCBMIDI0MC4zMDg1OTQgMCBMIDEyMC44MDg1OTQgMCBMIDEyMC44MDg1OTQgNzAuMzI0MjE5IEwgODIuNzMwNDY5IDcwLjMyNDIxOSBMIDgyLjczMDQ2OSAxMDkgTCAxNTkuNzM0Mzc1IDEwOSBMIDE1OS43MzQzNzUgMzkuNjEzMjgxIEwgMjAyLjY5NTMxMiAzOS42MTMyODEgTCAyMDIuNjk1MzEyIDk5LjQ0OTIxOSBDIDIwMi42OTUzMTIgOTkuNDQ5MjE5IDIwNC40NzY1NjIgMTE2LjIxMDkzOCAxODYuNDY4NzUgMTI3LjI2MTcxOSAiLz4KPHBhdGggc3R5bGU9IiBzdHJva2U6bm9uZTtmaWxsLXJ1bGU6bm9uemVybztmaWxsOnJnYigwJSw1OC40MzEzNzMlLDcyLjE1Njg2MyUpO2ZpbGwtb3BhY2l0eToxOyIgZD0iTSA4My4xMDE1NjIgMCBMIDcxLjk0MTQwNiAwIEMgNTEuNjc5Njg4IDAuNTYyNSAzMC40ODQzNzUgNi45Mjk2ODggMTYuMzIwMzEyIDIzLjAzOTA2MiBDIDEuNDA2MjUgMzkuODk0NTMxIDAgNTQuOTY4NzUgMCA3OS43ODUxNTYgQyAwIDk2LjY0MDYyNSAwIDI1Ny4xNDg0MzggMCAyNTcuMTQ4NDM4IEwgMTIxLjM3NSAyNTcuMTQ4NDM4IEwgMTIxLjM3NSAxODcuNTcwMzEyIEwgMTU5LjgyODEyNSAxODcuNTcwMzEyIEwgMTU5LjgyODEyNSAxNDguNDI1NzgxIEwgODIuNzMwNDY5IDE0OC40MjU3ODEgTCA4Mi43MzA0NjkgMjE4LjU2NjQwNiBMIDM4LjY0NDUzMSAyMTguNTY2NDA2IEwgMzguNjQ0NTMxIDcxLjU0Njg3NSBDIDM4LjY0NDUzMSA3MS41NDY4NzUgMzUuNzM0Mzc1IDM5LjYxMzI4MSA3NC4yODkwNjIgMzguNzY5NTMxIEwgODMuMTA1NDY5IDM4LjM5NDUzMSBMIDgzLjEwNTQ2OSAwICIvPgo8L2c+Cjwvc3ZnPgo=" alt="富邦 Fubon Logo" class="page-logo shrink-0">
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 my-auto">
+                    <div class="bg-white p-3 rounded-xl shadow-sm border border-gray-100">
+                        <div class="font-bold text-fubon-dark text-xs sm:text-sm mb-1.5 flex items-center gap-1">
+                            <i class="fa-solid fa-box text-fubon"></i> 商品 / 資本財
+                        </div>
+                        <div class="text-[11px] text-gray-600 space-y-1">
+                            <div><strong>1. 供應商法：</strong>實際碳足跡數據</div>
+                            <div><strong>2. 混合法：</strong>活動數據+行業係數</div>
+                            <div><strong>3. 支出法：</strong>採購金額×行業係數</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-3 rounded-xl shadow-sm border border-gray-100">
+                        <div class="font-bold text-fubon-dark text-xs sm:text-sm mb-1.5 flex items-center gap-1">
+                            <i class="fa-solid fa-truck text-fubon"></i> 運輸與配送
+                        </div>
+                        <div class="text-[11px] text-gray-600 space-y-1">
+                            <div><strong>4. 燃料法：</strong>燃料用量×係數</div>
+                            <div><strong>5. 距離法：</strong>貨重×距離×運具係數</div>
+                            <div><strong>6. 據點法：</strong>倉儲體積佔比計算</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-3 rounded-xl shadow-sm border border-gray-100">
+                        <div class="font-bold text-fubon-dark text-xs sm:text-sm mb-1.5 flex items-center gap-1">
+                            <i class="fa-solid fa-plug text-fubon"></i> 產品使用階段
+                        </div>
+                        <div class="text-[11px] text-gray-600 space-y-1">
+                            <div><strong>7. 能耗法：</strong>壽命×用電量×係數</div>
+                            <div><strong>8. 燃料原料法：</strong>售出總量×係數</div>
+                            <div><strong>9. 衍生氣體法：</strong>冷媒×GWP</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-3 rounded-xl shadow-sm border border-gray-100">
+                        <div class="font-bold text-fubon-dark text-xs sm:text-sm mb-1.5 flex items-center gap-1">
+                            <i class="fa-solid fa-trash-can text-fubon"></i> 廢棄物處理
+                        </div>
+                        <div class="text-[11px] text-gray-600 space-y-1">
+                            <div><strong>10. 廢棄物類別法：</strong>焚燒/掩埋/回收對應係數</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-2 bg-fubon-light/50 rounded-lg text-fubon-dark text-[11px] text-center font-medium mt-1">
+                    💡 企業可依資料可得性及重大性，選用最合適之方法學
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 13: 企業如何開始 -->
+        <section class="page-section" id="page13">
+            <div class="glass-card p-5 sm:p-7 md:p-10">
+                <div class="flex items-start justify-between gap-3 mb-2 md:mb-3">
+                    <div>
+                        <span class="text-fubon font-bold tracking-wider text-xs md:text-sm mb-0.5 md:mb-1 block">第三部分｜行動指南</span>
+                        <h2 class="text-xl sm:text-2xl md:text-3xl font-bold border-b-2 border-fubon inline-block pb-1">企業如何開始：6步走流程</h2>
+                    </div>
+                    <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMjQ4cHQiIGhlaWdodD0iMjU3cHQiIHZpZXdCb3g9IjAgMCAyNDggMjU3IiB2ZXJzaW9uPSIxLjEiPgo8ZyBpZD0ic3VyZmFjZTEiPgo8cGF0aCBzdHlsZT0iIHN0cm9rZTpub25lO2ZpbGwtcnVsZTpub256ZXJvO2ZpbGw6cmdiKDAlLDYzLjUyOTQxMiUsNjEuNTY4NjI3JSk7ZmlsbC1vcGFjaXR5OjE7IiBkPSJNIDE4Ni40Njg3NSAxMjcuMjYxNzE5IEMgMTg2LjQ2ODc1IDEyNy4yNjE3MTkgMTg2LjQ2ODc1IDEyOC4wMTE3MTkgMTg4LjYyNSAxMjkuNTExNzE5IEMgMjAyLjMyMDMxMiAxNDAuNTU4NTk0IDIwOS42MzY3MTkgMTUxLjIzODI4MSAyMDkuNTQyOTY5IDE3Mi45NjA5MzggQyAyMDkuNDQ5MjE5IDIwMC4xMTcxODggMTg1LjgxMjUgMjE5Ljc4MTI1IDE1OS4wODIwMzEgMjE5Ljc4MTI1IEwgMTU5LjA4MjAzMSAyNTcuMjQyMTg4IEMgMjA1LjY5NTMxMiAyNTcuMjQyMTg4IDI0OCAyMjQuMDg5ODQ0IDI0OCAxNzYuNzk2ODc1IEMgMjQ4IDE1OS44NDc2NTYgMjQzLjQwMjM0NCAxNDMuMTc5Njg4IDIzMS44NjMyODEgMTI2Ljk4NDM3NSBDIDIzMi40Mjk2ODggMTI2LjMyNDIxOSAyMzQuODY3MTg4IDEyMy40MjE4NzUgMjM2LjkzMzU5NCAxMTkuNzczNDM4IEMgMjM5Ljc0NjA5NCAxMTQuNzE0ODQ0IDI0MC4zMDg1OTQgMTA4LjYyNSAyNDAuMzA4NTk0IDg4LjMwODU5NCBMIDI0MC4zMDg1OTQgMCBMIDEyMC44MDg1OTQgMCBMIDEyMC44MDg1OTQgNzAuMzI0MjE5IEwgODIuNzMwNDY5IDcwLjMyNDIxOSBMIDgyLjczMDQ2OSAxMDkgTCAxNTkuNzM0Mzc1IDEwOSBMIDE1OS43MzQzNzUgMzkuNjEzMjgxIEwgMjAyLjY5NTMxMiAzOS42MTMyODEgTCAyMDIuNjk1MzEyIDk5LjQ0OTIxOSBDIDIwMi42OTUzMTIgOTkuNDQ5MjE5IDIwNC40NzY1NjIgMTE2LjIxMDkzOCAxODYuNDY4NzUgMTI3LjI2MTcxOSAiLz4KPHBhdGggc3R5bGU9IiBzdHJva2U6bm9uZTtmaWxsLXJ1bGU6bm9uemVybztmaWxsOnJnYigwJSw1OC40MzEzNzMlLDcyLjE1Njg2MyUpO2ZpbGwtb3BhY2l0eToxOyIgZD0iTSA4My4xMDE1NjIgMCBMIDcxLjk0MTQwNiAwIEMgNTEuNjc5Njg4IDAuNTYyNSAzMC40ODQzNzUgNi45Mjk2ODggMTYuMzIwMzEyIDIzLjAzOTA2MiBDIDEuNDA2MjUgMzkuODk0NTMxIDAgNTQuOTY4NzUgMCA3OS43ODUxNTYgQyAwIDk2LjY0MDYyNSAwIDI1Ny4xNDg0MzggMCAyNTcuMTQ4NDM4IEwgMTIxLjM3NSAyNTcuMTQ4NDM4IEwgMTIxLjM3NSAxODcuNTcwMzEyIEwgMTU5LjgyODEyNSAxODcuNTcwMzEyIEwgMTU5LjgyODEyNSAxNDguNDI1NzgxIEwgODIuNzMwNDY5IDE0OC40MjU3ODEgTCA4Mi43MzA0NjkgMjE4LjU2NjQwNiBMIDM4LjY0NDUzMSAyMTguNTY2NDA2IEwgMzguNjQ0NTMxIDcxLjU0Njg3NSBDIDM4LjY0NDUzMSA3MS41NDY4NzUgMzUuNzM0Mzc1IDM5LjYxMzI4MSA3NC4yODkwNjIgMzguNzY5NTMxIEwgODMuMTA1NDY5IDM4LjM5NDUzMSBMIDgzLjEwNTQ2OSAwICIvPgo8L2c+Cjwvc3ZnPgo=" alt="富邦 Fubon Logo" class="page-logo shrink-0">
+                </div>
+                
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3 my-auto">
+                    <div class="bg-white rounded-xl p-2.5 sm:p-3.5 shadow-sm border border-gray-100">
+                        <div class="flex items-center gap-1.5 mb-1">
+                            <span class="w-5 h-5 rounded-full bg-fubon text-white font-black text-[10px] flex items-center justify-center">01</span>
+                            <h4 class="font-bold text-gray-800 text-xs sm:text-sm">盤查準備</h4>
+                        </div>
+                        <p class="text-[10px] sm:text-xs text-gray-500">確立邊界，鑑別重大性排放源。</p>
+                    </div>
+                    <div class="bg-white rounded-xl p-2.5 sm:p-3.5 shadow-sm border border-gray-100">
+                        <div class="flex items-center gap-1.5 mb-1">
+                            <span class="w-5 h-5 rounded-full bg-fubon text-white font-black text-xs flex items-center justify-center">02</span>
+                            <h4 class="font-bold text-gray-800 text-xs sm:text-sm">數據蒐集</h4>
+                        </div>
+                        <p class="text-[10px] sm:text-xs text-gray-500">對接供應商與內部採購物流。</p>
+                    </div>
+                    <div class="bg-white rounded-xl p-2.5 sm:p-3.5 shadow-sm border border-gray-100">
+                        <div class="flex items-center gap-1.5 mb-1">
+                            <span class="w-5 h-5 rounded-full bg-fubon text-white font-black text-xs flex items-center justify-center">03</span>
+                            <h4 class="font-bold text-gray-800 text-xs sm:text-sm">選擇方法</h4>
+                        </div>
+                        <p class="text-[10px] sm:text-xs text-gray-500">依可得性選用 11 種方法學。</p>
+                    </div>
+                    <div class="bg-white rounded-xl p-2.5 sm:p-3.5 shadow-sm border border-gray-100">
+                        <div class="flex items-center gap-1.5 mb-1">
+                            <span class="w-5 h-5 rounded-full bg-fubon text-white font-black text-xs flex items-center justify-center">04</span>
+                            <h4 class="font-bold text-gray-800 text-xs sm:text-sm">計算驗證</h4>
+                        </div>
+                        <p class="text-[10px] sm:text-xs text-gray-500">計算總量並完成確信審核。</p>
+                    </div>
+                    <div class="bg-white rounded-xl p-2.5 sm:p-3.5 shadow-sm border border-gray-100">
+                        <div class="flex items-center gap-1.5 mb-1">
+                            <span class="w-5 h-5 rounded-full bg-fubon text-white font-black text-xs flex items-center justify-center">05</span>
+                            <h4 class="font-bold text-gray-800 text-xs sm:text-sm">揭露溝通</h4>
+                        </div>
+                        <p class="text-[10px] sm:text-xs text-gray-500">於永續報告書與年報公開。</p>
+                    </div>
+                    <div class="bg-white rounded-xl p-2.5 sm:p-3.5 shadow-sm border border-gray-100">
+                        <div class="flex items-center gap-1.5 mb-1">
+                            <span class="w-5 h-5 rounded-full bg-fubon text-white font-black text-xs flex items-center justify-center">06</span>
+                            <h4 class="font-bold text-gray-800 text-xs sm:text-sm">持續改進</h4>
+                        </div>
+                        <p class="text-[10px] sm:text-xs text-gray-500">提高一手數據比重，推動減碳。</p>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-r from-fubon to-fubon-dark text-white rounded-xl p-2.5 sm:p-3.5 shadow-sm mt-2">
+                    <h3 class="font-bold text-xs sm:text-sm text-center mb-1.5 flex items-center justify-center gap-1">
+                        <i class="fa-solid fa-clipboard-check text-yellow-300"></i> 報告書【三個必揭露內容】
+                    </h3>
+                    <div class="grid grid-cols-3 gap-1.5 text-center text-[10px] sm:text-xs">
+                        <div class="bg-white/10 p-1.5 rounded">1. 溫室氣體絕對量</div>
+                        <div class="bg-white/10 p-1.5 rounded">2. 納入類別及比例</div>
+                        <div class="bg-white/10 p-1.5 rounded">3. 方法學與涵蓋率</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        const sections = document.querySelectorAll('.page-section');
+        const dotNav = document.getElementById('dotNav');
+        
+        sections.forEach((section, index) => {
+            const dot = document.createElement('a');
+            dot.href = `#${section.id}`;
+            dot.className = 'nav-dot w-3 h-3 rounded-full bg-gray-300 block hover:bg-fubon';
+            dot.title = `Page ${index + 1}`;
+            dotNav.appendChild(dot);
+        });
+
+        const dots = document.querySelectorAll('.nav-dot');
+        const mainContainer = document.getElementById('mainContainer');
+
+        const observerOptions = {
+            root: mainContainer,
+            threshold: 0.3
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    dots.forEach(dot => dot.classList.remove('active'));
+                    const id = entry.target.id;
+                    const index = parseInt(id.replace('page', '')) - 1;
+                    if (dots[index]) dots[index].classList.add('active');
+                    updateReadingProgress(index);
+                } else {
+                    entry.target.classList.remove('is-visible');
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+
+        // 閱讀進度條
+        const progressFill = document.getElementById('readingProgressFill');
+        const progressIcon = document.getElementById('readingProgressIcon');
+        const progressLabel = document.getElementById('readingProgressLabel');
+        const totalPages = sections.length;
+        
+        const growthStages = [
+            { upTo: 1, icon: '🌰' },
+            { upTo: 4, icon: '🌱' },
+            { upTo: 8, icon: '🌿' },
+            { upTo: totalPages - 1, icon: '🌳' }
+        ];
+
+        function updateReadingProgress(index) {
+            const percent = (index / (totalPages - 1)) * 100;
+            progressFill.style.width = percent + '%';
+            progressIcon.style.left = percent + '%';
+            const stage = growthStages.find(s => index <= s.upTo) || growthStages[growthStages.length - 1];
+            progressIcon.textContent = stage.icon;
+            progressLabel.textContent = `${index + 1} / ${totalPages}`;
+        }
+
+        if (sections.length > 0) {
+            sections[0].classList.add('is-visible');
+        }
+        updateReadingProgress(0);
+    </script>
+</body>
+</html>
