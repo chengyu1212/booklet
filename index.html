@@ -47,11 +47,14 @@
             scroll-snap-type: y mandatory;
             overflow-y: scroll;
             height: 100vh;
+            height: 100dvh;
             scroll-behavior: smooth;
         }
         .page-section {
             scroll-snap-align: start;
+            scroll-snap-stop: always;
             height: 100vh;
+            height: 100dvh;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -76,6 +79,14 @@
             /* 預設初始狀態：隱藏且下移 20px */
             opacity: 0;
             transform: translateY(20px);
+        }
+
+        @media (max-width: 767px) {
+            .glass-card {
+                height: calc(100dvh - 3rem);
+                min-height: 0;
+                max-height: none;
+            }
         }
 
         /* 滾動到每一頁時觸發 fadeInUp 質感動畫 */
@@ -193,6 +204,16 @@
             #readingProgressIcon { top: 7px; font-size: 1.6rem; }
             #readingProgressLabel { top: 12px; font-size: 0.75rem; }
         }
+        .level-card {
+            width: 100%;
+            font-family: inherit;
+        }
+        .level-card.level-selected {
+            box-shadow: 0 8px 24px 0 rgba(0,0,0,0.12);
+            transform: translateY(-2px);
+        }
+        #level1Card.level-selected { border-color: #b45309; box-shadow: 0 8px 24px 0 rgba(180,83,9,0.25); }
+        #level2Card.level-selected { border-color: #334155; box-shadow: 0 8px 24px 0 rgba(51,65,85,0.2); }
         .nav-dot {
             transition: all 0.3s ease;
         }
@@ -601,7 +622,7 @@
                 
                 <div class="grid md:grid-cols-2 gap-6 my-auto">
                     <!-- Level 1: 金牌 -->
-                    <div class="bg-gradient-to-br from-amber-50/50 via-green-50/40 to-white rounded-2xl p-5 border-2 border-amber-400 shadow-sm">
+                    <button type="button" id="level1Card" class="level-card text-left bg-gradient-to-br from-amber-50/50 via-green-50/40 to-white rounded-2xl p-5 border-2 border-amber-400 shadow-sm cursor-pointer hover:shadow-lg hover:-translate-y-1 active:scale-[0.97] transition-all duration-200">
                         <div class="flex items-center justify-between mb-3">
                             <h3 class="text-2xl font-black text-amber-700">Level 1</h3>
                             <div class="text-amber-500 text-3xl filter drop-shadow">
@@ -620,10 +641,10 @@
                         <div class="bg-amber-100/70 text-amber-900 text-xs md:text-sm p-2.5 rounded text-center font-bold border border-amber-200">
                             代表企業高度承諾永續，堪稱業界典範
                         </div>
-                    </div>
+                    </button>
 
                     <!-- Level 2: 銀牌 -->
-                    <div class="bg-gradient-to-br from-slate-50 via-gray-50 to-white rounded-2xl p-5 border-2 border-slate-400 shadow-sm">
+                    <button type="button" id="level2Card" class="level-card text-left bg-gradient-to-br from-slate-50 via-gray-50 to-white rounded-2xl p-5 border-2 border-slate-400 shadow-sm cursor-pointer hover:shadow-lg hover:-translate-y-1 active:scale-[0.97] transition-all duration-200">
                         <div class="flex items-center justify-between mb-3">
                             <h3 class="text-2xl font-black text-slate-700">Level 2</h3>
                             <div class="text-slate-400 text-3xl filter drop-shadow">
@@ -642,7 +663,7 @@
                         <div class="bg-slate-100 text-slate-700 text-xs md:text-sm p-2.5 rounded text-center font-bold border border-slate-200">
                             代表企業積極朝向轉型，進展明顯
                         </div>
-                    </div>
+                    </button>
                 </div>
 
                 <div class="bg-white p-4 rounded-xl shadow-sm flex flex-col md:flex-row items-center justify-between border border-gray-100 hover:shadow-md transition-shadow duration-200">
@@ -857,8 +878,11 @@
                     </div>
                 </div>
 
-                <div class="text-center text-gray-600 bg-white/60 py-2.5 rounded-full font-bold text-xs md:text-sm">
-                    💡 企業不必全部揭露！根據自身產業位置和重大性，選擇最相關的類別揭露即可。
+                <div class="bg-gradient-to-r from-emerald-50 via-teal-50 to-white rounded-2xl p-4 border border-teal-200 shadow-sm">
+                    <div class="flex items-center gap-2 text-teal-900 font-bold text-sm md:text-base">
+                        <i class="fa-solid fa-lightbulb text-amber-500 text-base"></i>
+                        <span>企業不必全部揭露！根據自身產業位置和重大性，選擇最相關的類別揭露即可。</span>
+                    </div>
                 </div>
             </div>
         </section>
@@ -961,9 +985,13 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="mt-4 p-3 bg-fubon-light/50 rounded-xl text-fubon-dark text-xs font-medium">
-                            💡 企業可依資料可得性及重大性，針對不同類別選用合適之方法學。
-                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-r from-emerald-50 via-teal-50 to-white rounded-2xl p-4 border border-teal-200 shadow-sm mt-4">
+                    <div class="flex items-center gap-2 text-teal-900 font-bold text-xs md:text-sm">
+                        <i class="fa-solid fa-lightbulb text-amber-500 text-base"></i>
+                        <span>企業可依資料可得性及重大性，針對不同類別選用合適之方法學。</span>
                     </div>
                 </div>
                 <div></div>
@@ -1230,6 +1258,19 @@
             sections[0].classList.add('is-visible');
         }
         updateReadingProgress(0);
+
+        // Page 8：Level 1 / Level 2 卡片點選（可切換選取狀態）
+        const level1Card = document.getElementById('level1Card');
+        const level2Card = document.getElementById('level2Card');
+        [level1Card, level2Card].forEach(card => {
+            if (!card) return;
+            card.addEventListener('click', () => {
+                const wasSelected = card.classList.contains('level-selected');
+                level1Card.classList.remove('level-selected');
+                level2Card.classList.remove('level-selected');
+                if (!wasSelected) card.classList.add('level-selected');
+            });
+        });
     </script>
     <script>
     (function () {
